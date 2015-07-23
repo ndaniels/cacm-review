@@ -185,7 +185,8 @@ large libraries of data.
 One approach to solving these challenges is to embrace cloud computing.
 Google, Inc. and the Broad Institute have teamed up to bring the GATK (Genome 
 Analysis Toolkit) to the Google cloud (https://cloud.google.com/genomics/gatk).
-ALSO MENTION AMAZON AWS HERE.
+Amazon Web Services are also commonly used for computational biology 
+research~\cite{schatz2010cloud}.
 However, while cloud computing frees researchers from maintaining their own
 data centers, and provides cost-saving benefits when computing resources are
 not needed around the clock, it is no panacea.
@@ -200,15 +201,13 @@ systems that make up those cloud datacenters are still themselves bound by
 improvements in semiconductor technology; they still follow the trajectory
 suggested by Moore's law.
 
-ALGORITHMS FOR COMING UP WITH NOVEL BIOLOGICAL INSIGHTS not FOCUS OF THIS REVIEW
-STORAGE REQUIREMENTS, NETWORK TRANSMISSION, ETC.
-
 Computer scientists routinely exploit peculiarities in the structure of data in
 order to reduce time or space complexity.
 In computational biology, this approach has served researchers well.
 Now-classical approaches such as principal component analysis (PCA) reduce the 
 dimensionality of data in order to simplify analysis and uncover salient 
 features.
+This review focuses on algorithmic advances for dealing with the growth in biological data; algorithms for novel biological insights are not its focus.
 
 \section{Biological sequence data and next-generation sequencing}
 
@@ -261,29 +260,118 @@ Seeking to take advantage of sequence redundancy, \cite{loh2012compressive}
 introduced \emph{compressive genomics}, an approach that relies on compressing
 data in such a way that the desired computation (such as BLAST search) can be
 performed in the compressed representation.
-This approach 
-
-(now, redundancy and compressive) loh2012compressive
-
-
-Make use of a completely different paradigm for the structure of biological data. By combining redundancy with a low fractal dimension, able to develop algorithms that scale.
-
-Next-gen sequencing, and some applications
-Slide 27 to illustrate how sequencing works (2a, 2b)
-Slide 28: sequence analysis pipeline (2c)
-Redundancy - 
-- 1000 genomes project, flybase, wormbase
-- subsequence similarity (k-mer approaches)
-
-Quality score compression
-
-lossy compression - quartz
-
-Mince~\cite{patro2015data} groups similar reads (those that share a common 
+This approach relies on a two-stage search, referred to as \emph{coarse} and \emph{fine} search.
+Coarse search is performed only on the coarse, or representative, subsequences
+that represent unique data.
+Any coarse sequence that is within some threshold of the query is then expanded 
+into all the similar sequences it represents; the fine search is then over this
+(typically small) subset of the original database.
+This approach provides run-time improvements to BLAST search on 
+nucleotide~\cite{loh2012compressive} and protein~\cite{daniels2013compressive}
+data; moreover, these run-time improvements increase as databases grow.
+Also taking advantage of sequence redundancy, Mince~\cite{patro2015data} groups 
+similar reads (those that share a common 
 substring) together into ``buckets'', allowing that common substring to now be 
 removed and treated as the bucket label, so that each read in the compressed 
 representation comprises only its unique differences from the bucket label.
 This allows a general-purpose compressor to achieve tight compression.
+SCALCE~\cite{hach2012scalce} also relies on a ``boosting'' scheme, reordering
+reads in such a way that a general-purpose compressor achieves improved
+compression ratios.
+
+Along with a genome sequence, modern sequencing systems provide a measure of
+the quality of, or confidence in, the nucleotide base read at every position.
+While nucleotides reside in a 4-letter alphabet, na\"ively representable in two 
+bits per position, these quality scores occupy a larger range, na\"ively
+requiring six or seven bits per position.
+Thus, quality scores offer low-hanging fruit with respect to compression for 
+storage and transmission of sequence data.
+Several approaches to compressing quality scores have been 
+presented~\cite{janin2013adaptive,bonfield2013compression,ochoa2013qualcomp,yu2015quality}.
+Quartz~\cite{yu2015quality} takes the unusual approach of applying lossy 
+compression, by bounding the likelihood that a quality score is informative.
+Surprisingly, Quartz not only demonstrates improved compression over competing
+approaches, but slightly improves the accuracy of downstream variant-calling.
+
+The idea of taking advantage of redundancy in sequence data is particularly
+important in the face of new sources of data.
+Driven by the plummeting costs of next-generation sequencing, the 1000 Genomes Project~\cite{10002012integrated} is pursuing a broad catalog of human 
+variation; instead of producing a single reference genome for a species, many
+complete genomes are catalogued.
+Likewise, WormBase~\cite{harris2014wormbase} and 
+FlyBase~\cite{tweedie2009flybase} are cataloguing many different species and
+strains of the \emph{Caenorhabditis} worm and \emph{Drosophila} fruit fly, 
+respectively.
+On a potentially even larger scale is the growth of metagenomic data.
+Metagenomics is the study of the many genomes (bacterial, fungal, and even 
+viral) that make up a particular environment.
+Such an environment could be soil from a particular region (which can lead to 
+the discovery of new 
+antibiotics~\cite{gillespie2002isolation,forsberg2012shared}), or it could be 
+the human gut, whose microbiome has been linked to human-health concerns 
+including Autism Spectrum Disorder~\cite{macfabe2012short}, 
+Crohn's Disease~\cite{gevers2014treatment,manichanh2006reduced}, and 
+obesity~\cite{greenblum2012metagenomic}.
+
+The continued ability to search and analyze these growing data sets hinges on
+clever algorithms that take advantage of the structure of, and redundancy 
+present in, the data.
+Indeed, these growing data sets ``threaten to make the arising problems 
+computationally infeasible.''~\cite{berger2013computational}
+
+One approach to more quickly searching these data sets is to come up with an
+indexing technique that leverages domain knowledge about the structure of the
+data.
+In the realm of NGS read mapping, the Genome Multitool (GEM)
+mapper~\cite{marco2012gem} makes use of a Ferragina-Manzini 
+index~\cite{ferragina2000opportunistic} coupled with dynamic programming in
+a compressed representation, in order to prune the search space when mapping
+reads to a reference genome.
+Masai~\cite{siragusa2013fast} uses an ``approximate seed'' approach to indexing
+the space of possible matches, likewise pruning the search space.
+
+Another approach is to make use of a completely different paradigm for the 
+structure of biological data. 
+By combining redundancy with a low fractal 
+dimension~\cite{yu2015entropy}, it may be possible to develop algorithms that 
+scale even as the data continue to grow.
+The CORA read mapper~\cite{yorukoglu2015compressive} applies a $k$-mer based 
+read-compression approach with a compressive indexing of the reference genome
+(referred to as a homology table).
+Short seed-clustering schemes, such as those used in Masai and 
+MrsFAST~\cite{hach2010mrsfast} conceptually differ from CORA in that those 
+schemes aim to accelerate only the seed-to-reference matching step.
+Thus, there is a subsequent seed-extension step, which is substantially more 
+costly and still needs to be performed for each read and mapping individually, 
+even when seeds are clustered. 
+Through its k-mer based read compression model, CORA is able to accelerate and 
+achieve asymptotically sublinear scaling for both the seed-matching and 
+seed-extension steps within coarse-mapping, which comprises the major bulk of 
+the read-mapping computation.
+
+In the realm of metagenomic search, BLASTX~\cite{altschul1990basic} is commonly
+used to translate nucleotide reads into their possible protein sequences, and
+search for them in a protein database.
+Recent advances in metagenomic search tools have relied on three advances over
+BLASTX: indexing, alphabet reduction, and compression.
+RapSearch2~\cite{zhao2012rapsearch2} relies on alphabet reduction and a 
+collision-free hash table.
+The alphabet reduction, as it is reversible, can be thought of as a form of
+lossless compression; a 20-letter amino acid alphabet is mapped onto a smaller
+alphabet, with offsets stored to recover the original sequence in the full
+alphabet.
+The hash-table provides an efficient index of the database to be searched.
+DIAMOND~\cite{buchfink2014fast} also relies on alphabet reduction, but uses
+``shaped seeds'' instead of simple $k$-mer seeds to index the database.
+
+The recently-released MICA~\cite{yu2015entropy} demonstrates that the 
+compressive-acceleration approach of 
+caBLAST~\cite{loh2012compressive} and caBLASTP~\cite{daniels2013compressive} is 
+largely orthogonal to alphabet-reduction and indexing approaches.
+MICA applies the compressive-acceleration framework to DIAMOND, using DIAMOND
+for its ``coarse search'' phase and a user's choice of DIAMOND or BLASTX for its
+``fine search'' phase; it demonstrates comparable run-time gains over DIAMOND as
+caBLASTP does over BLASTP.
 
 \section{Non-sequence data}
 
@@ -296,14 +384,13 @@ quantitative, as each gene from a sample is associated with a numeric expression
 level, and high-dimensional, as many thousands of genes may be analyzed at a
 time.
 While expression data lends itself to cluster analysis and probabilistic 
-approaches, the high dimensionality presents challenges.
+approaches, the high dimensionality presents challenges~\cite{nguyen2002tumor}.
 Principal Component Analysis has shown promise in reducing the dimensionality
-of gene expression data~\cite{raychaudhuri2000principal, alter2000singular, yeung2001principal, misra2002interactive}.
-[NEED CITATIONS FOR DIFFICULTIES -- HIGH DIM MICROARRAY DATA]
+of gene expression data~\cite{raychaudhuri2000principal,alter2000singular,yeung2001principal,misra2002interactive}.
 Some recent work has explored other ways to exploit the high-dimensional 
 structure of the data.
 SPARCLE (SPArse ReCovery of Linear combinations of Expression)~\cite{prat2011recovering}
-brings ideas from compressed sensing~\cite{candes2005decoding, candes2006stable, donoho2006compressed} 
+brings ideas from compressed sensing~\cite{candes2005decoding,candes2006stable,donoho2006compressed} 
 to gene expression analysis.
 Specifically, SPARCLE relies on the idea that a randomly-chosen set of points 
 are unlikely to be close in a lower-dimensional linear subspace.
@@ -341,13 +428,13 @@ functions when applied to standard approaches such as neighbor voting for functi
 
 As new functional annotations and protein-protein interactions are discovered,
 the number and size of these networks grows.
-Diffusion component analysis (DCA)~\cite{cho} amounts to a network-based 
+Diffusion component analysis (DCA)~\cite{cho2015diffusion} amounts to a network-based 
 analogue of principle component analysis; DCA reduces the dimensionality of a
 network in such a way that function annotation can be performed in the reduced 
 space, significantly reducing running time while still providing competitive
 prediction accuracy.
 
-Finally, in the realm of protein structure prediction, it has been 
+In the realm of protein structure prediction, it has been 
 observed~\cite{dunbrack2002rotamer} that rather than exploring the continuous 
 range of
 possible dihedral angles, protein structures inhabit a smaller subspace, defined
@@ -359,82 +446,103 @@ purpose of sidechain packing (finding the lowest-energy conformation for the
 sidechain of each amino acid), using tree width to reduce the search space and
 simplify dependencies.
 
+The compressive acceleration approach of \cite{loh2012compressive} has been
+generalized and adapted to non-sequence spaces as well.
+Chemogenomics, the computational study of small-molecule compounds and their
+affect on phenotype, relies on comparing chemical graph structures to identify
+similar molecules and binding sites.
+However, there are once again an increasing number of such chemical compounds
+to search; the NCBI's PubChem database has grown from 31 million compounds in
+January 2011 to 68 million in July, 2015.
+Furthermore, comparing chemical graph structures typically involves computing
+the maximal common subgraph (MCS), an NP-hard problem.
+One approach to this type of search is the Small Molecule Subgraph Detector 
+(SMSD)~\cite{rahman2009small}, which applies one of several MCS algorithms based
+on the size and complexity of the graphs in question.
+Applying a compressive acceleration approach, Ammolite~\cite{yu2015entropy}
+accelerates SMSD search by an average of 150x on the PubChem database.
 
+When the structure of a protein is known but its biological function or 
+evolutionary relationships are not, researchers may search for structurally
+similar proteins that are better studied~\cite{gibrat1996surprising}.
+Classical tools for this involve performing pairwise structural alignments to
+look for geometric similarity; DALI~\cite{holm1995dali} is still widely used,
+along with other aligners such as FATCAT~\cite{ye2004fatcat} and 
+Matt~\cite{menke2008matt}.
+FragBag~\cite{budowski2010fragbag} accelerates protein structure search by
+approximating structural alignments, which can be computationally demanding,
+by instead comparing the ``bag-of-words'' from each structure.
+Analogous to a term-frequency vector in information retrieval, this bag-of-words
+indicates the abundance of particular, short structural motifs within a protein.
+Again applying a compressive acceleration approach, 
+esFragBag~\cite{yu2015entropy} clusters proteins based on the cosine distance or
+Euclidean distance of their bag-of-words vectors, further accelerating FragBag's
+running time by an average of 10x.
 
+\section{Conclusions and future prospects}
 
+The explosion of biological data, largely due to technological advances such as
+next-generation sequencing, presents us with challenges as well as 
+opportunities.
+The promise of unlocking the secrets of diseases such as cancer, obesity,
+Alzheimer's, autism spectrum disorder, and many others, as well as better 
+understanding the basic science of biology, relies on researchers' ability to 
+analyze the growing flood of genomic, metagenomic, structural, and interactome 
+data.
 
+The approach of compressive acceleration~\cite{loh2012compressive}, and its 
+demonstrated ability to scale with the metric entropy of the 
+data~\cite{yu2015entropy}, while providing orthogonal benefits to many other
+useful indexing techniques, is an important tool for coping with the deluge of
+data.
+The extension of this compressive acceleration approach to 
+metagenomics~\cite{yu2015entropy}, NGS read 
+mapping and chemogenomics~\cite{yorukoglu2015compressive} suggests its 
+flexibility.
 
+The field of computational biology must continue to innovate, but also to 
+incorporate the best ideas from other areas of computer science.
+For example, the compressive-acceleration approach bears similarity to a metric 
+ball tree, first described in the database community over twenty years 
+ago~\cite{uhlmann1991satisfying}.
+Other ideas from image processing, computational geometry, and other areas 
+outside of biology are likely to bear fruit.
+It is also likely that algorithmic ideas developed within computational biology
+will become useful in other fields experiencing a data deluge, such as astronomy
+or social networks~\cite{stephens2015big}.
 
-Exploiting novel structure in biological data
-- What data looks like
-- actual fractal dimension and metric entropy of example data sets: table
- - metagenomics
- - protein seq
- - bacterial genomes
- - protein structure
- - chemogenomics
-- Runtime
-- Storage
-- Search as exemplar.
+While this Review has focused on the importance of algorithms that leverage the
+structure of data to cope with the increased throughput in computational 
+biology, it is also essential that techniques continue to make better 
+predictions and models that demonstrate improved fidelity to wet-lab 
+experiments.
 
-Sequence-based data
-- cite NRG, see cablast
-- cora
-- masai, gem
-- (include stuff about novelty in mapping over k-mer based approaches from Cora letter to editor)
-- existing mappers, cite NRG paper, and pick up where it leaves off
-NOT talking about assembly
-- metagenomics
-
-Beyond sequence data
-- chemogenomics
-- protein structure data
-
-Conclusions and future prospect
-
-Other methods from image processing, etc.
-Beyond biological data
-
-
-for other approaches that have NOT been used in biology, see discussion
-in conclusion:
-other approaches that haven't been used in comp bio: 
-- computational geometry (Piotr Indyk)
-- succinct data structures
-- 
-
-
-
-
-
-
-sequence approaches
-
-structure approaches
-
-abstraction to distance functions
-
-no coordinate system
-
-
-
-
-
-
-these observations about bio data will also hold for data from wildly different sources.
-
-be sure to cite NRG paper, for how to extract structure from high-dimensional data.
-
+\begin{table}
+\caption{Metric entropy ratio (ratio of clusters to entries in database) and
+fractal dimension at typical search radii for four biological data sets.
+NCBI's ``NR'' non-redundant protein sequence and ``NT'' non-redundant nucleotide sequence databases are from June, 2015. Protein Databank (PDB) is from July, 2015. PubChem is from October, 2013.}
+\begin{tabular}{ccc}
+\hline
+Data set & Metric entropy ratio & Fractal dimension \\        
+\hline
+Nucleotide sequences (NCBI NT) & 7:1 & 1.5\\
+\hline
+Protein sequences (NCBI NR) & 5:1 & 1.6\\
+\hline
+Protein structure (PDB) & 10:1 & 2.5\\
+\hline
+Chemical structure (PubChem) & 11:1 & 0.2\\
+\hline
+\end{tabular}
+\end{table}
 
 
 
 % Bibliography
-\bibliographystyle{ACM-Reference-Format-Journals}
+% \bibliographystyle{ACM-Reference-Format-Journals}
+\bibliographystyle{abbrv}
 \bibliography{main}
-                             % Sample .bib file with references that match those in
-                             % the 'Specifications Document (V1.5)' as well containing
-                             % 'legacy' bibs and bibs with 'alternate codings'.
-                             % Gerry Murray - March 2012
+
 
 
 \end{document}
