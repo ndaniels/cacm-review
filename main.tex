@@ -161,20 +161,20 @@ next-generation sequencing.
 The material costs to sequence a genome have plummeted in the past
 decade, to the point where a whole human genome can be sequenced for less than
 one thousand U.S. Dollars.
-As a result, by some estimates, the amount of genomic data available to 
+As a result, the amount of genomic data available to 
 researchers is increasing by a factor of 10 every year.
 
 \begin{figure}[htb!]
 \centering
-\subfloat[Growth of genomic sequence data as compared with the combined power of the top-500 supercomputer list; y-axis is logarithmic]{
+\subfloat[Growth of genomic sequence data (orange) as compared with the combined power of the top-500 supercomputer list (blue); y-axis is logarithmic]{
 \includegraphics[width=3.0in]{assets/moore.png}
 \label{fig:moore}
 }\\
-\subfloat[Growth of genomic sequence data as compared with hard drive capacity; y-axis is logarithmic]{
+\subfloat[Growth of genomic sequence data (orange) as compared with hard drive capacity (blue); y-axis is logarithmic]{
 \includegraphics[width=3.0in]{assets/kryder.png}
 \label{fig:kryder}
 }
-\caption[Sequencing vs. Storage]{Moore's and Kryder's laws contrasted with genomic sequence data}
+\caption[Sequencing vs. Storage]{Moore's (a) and Kryder's (b) laws contrasted with genomic sequence data}
 \label{fig:growth}
 \end{figure}
 
@@ -206,27 +206,134 @@ order to reduce time or space complexity.
 In computational biology, this approach has served researchers well.
 Now-classical approaches such as principal component analysis (PCA) reduce the 
 dimensionality of data in order to simplify analysis and uncover salient 
-features.
-This review focuses on algorithmic advances for dealing with the growth in biological data; algorithms for novel biological insights are not its focus.
+features~\cite{berger2013computational}.
+As another example, clever indexing techniques such as the Burroughs-Wheeler 
+Transform (BWT) also take advantage of aspects of sequence 
+data~\cite{berger2013computational}.
+This review focuses on algorithmic advances for dealing with the growth in 
+biological data; algorithms for gaining novel biological insights are not its 
+focus.
 
-\section{Biological sequence data and next-generation sequencing}
+\section{Types and sources of biological data}
 
-Many, but not all, of the problems in computational biology deal with sequence
-data, either nucleotide sequences (nominally a four-letter alphabet) or protein
-sequences (nominally a twenty-letter alphabet).
-Certainly, as sequencing is generating the greatest volume of biological data,
-a large portion of bioinformatics algorithms deal primarily with string data.
-For the problem of exact search, approaches for transforming and indexing 
-string data provide benefits.
-The Burrows-Wheeler transform (BWT)~\cite{burrows1994block} provides efficient string 
+In the central dogma of molecular biology, DNA is transcribed into RNA, which
+is translated by the ribosome into a polypeptide chain, a sequence of amino 
+acids, known as a protein.
+This protein folds into a complex, low-energy structure, and functions as
+a cellular machine itself; the DNA sequence determines the amino acid sequence,
+which in turn determines the folded structure of the protein.
+This structure ultimately determines the protein's function within the cell.
+Certain kinds of RNA also function, sometimes with proteins, as cellular 
+machines.
+Thus, researchers are interested in DNA, RNA, and protein sequences, as well
+as the structures that RNA and proteins form.
+Researchers also study the resulting functions of RNA and proteins, in what
+abundance they occur (this is known as gene expression), and how they interact
+with each other (interaction networks).
+
+Most but not all biological data take the form of \emph{sequence} data, either 
+nucleotide sequences (nominally a four-letter alphabet representing the four 
+DNA or RNA bases) or protein sequences (nominally a twenty-letter alphabet 
+representing the twenty standard amino acids).
+Sequence data are obtained in several ways, including mass spectrometry (which
+can determine protein sequence) and RNA-seq (which can determine RNA sequence, 
+and by inference the protein sequence into which it might translate).
+However, the greatest volume of sequence data derive from next-generation 
+sequencing (commonly abbreviated NGS) technologies, and comprise DNA sequences.
+At the dawn of the genomic era, Sanger sequencing was the most widely used 
+method.
+Slow and labor intensive but well-tested, Sanger sequencing is still used to 
+validate NGS results.
+More recently, Sanger sequencing has largely been supplanted by NGS approaches,
+beginning with Illumina's ``sequencing by synthesis,'' which allows vastly 
+greater throughput due to massive parallelism, low cost, and simple preparation
+of samples.
+Importantly to this Review, Illumina sequencing, as well as other approaches
+such as SOLiD, Ion Torrent, and 454 pyrosequencing, does not read a single DNA
+molecule end-to-end as one could a file from a hard drive.
+Instead, DNA molecules are chopped into many small fragments, or 
+\emph{reads} (Figure ~\ref{fig:shotgun}), 
+which are read concurrently, and which must be reassembled in the correct order 
+if an entire genome is to be read.
+Reads most typically range from 50 to 200 bases long, though longer reads are
+available with some technologies.
+This so-called ``shotgun sequencing'' is analogous to the problem of 
+reconstructing a large file from small, 
+randomly-ordered reads, or a shredded paper document.
+However, these NGS reads overlap, and they are many in number, so 
+reconstructing an entire genome is feasible.
+No sequencing technology is completely infallible, so sequencing machines also
+provide a \emph{quality score} (or measure of the confidence in the DNA base
+called) associated with each position.
+Thus, an NGS read is a string of DNA letters, coupled with a string of ASCII
+characters that encode the quality of the base call.
+A sequencing run will produce many of these reads, typically stored in a FASTQ
+file.
+
+Protein structure, primarily determined through X-ray crystallography or
+nuclear magnetic resonance (NMR), describes the coordinates of each atom, in 
+Angstroms, of a protein in three-dimensional space.
+This information is important to understanding how a protein functions, because
+proteins interact physically with other molecules.
+Protein structure data are commonly stored in the Protein Data Bank (PDB); 
+each PDB entry has an associated resolution indicating the accuracy of the
+structural description.
+Thus a PDB entry at its most basic level contains a list of atoms, along with
+which amino acid they belong to and their spatial coordinates as floating-point
+numbers.
+
+Chemical compounds represent another source of structural data, more general
+than proteins.
+Determined by X-ray crystallography, NMR, electron microscopy and other 
+techniques, compounds---many of which are useful pharmaceuticals---can be
+represented as labeled graphs.
+In such a graph, the vertices are atoms (labeled with chemical element) and
+the edges are bonds between atoms (labeled with bond type, such as single or
+double).
+Chemical compounds are stored in databases such as PubChem, and can be described
+as adjacency matrices.
+
+\section{Challenges in biological data}
+
+Given DNA or RNA reads from NGS technologies, the first task is to 
+\emph{assemble} those fragments of sequence (which have associated quality 
+scores) into contiguous sequences.
+The task of \emph{de novo} assembly is beyond the scope of this Review, but is
+possible because reads overlap and because the sequence is covered by many such
+overlapping reads~\cite{zhang2011practical}; the \emph{de Bruijn graph} is a 
+commonly-used data structure.
+Often, however, a \emph{reference genome} (or in the case of RNA, 
+\emph{transcriptome}) is available for the organism being sequenced; the
+establishment of a human reference genome was indeed the purpose of the Human
+Genome Project.
+When a reference sequence is available, NGS reads must be \emph{mapped} onto
+this reference (Figure ~\ref{fig:ngs-pipeline}).
+This allows the differences between the newly-sequenced genome and the reference
+to be analyzed; these differences may include single-nucleotide polymorphisms
+(SNPs, which are the genetic analogue to bit-flips) (Figure~\ref{fig:snps}), 
+insertions 
+or deletions, or larger-scale changes in the genome.
+While reference-based read mapping is a fundamentally simpler problem than
+\emph{de novo} assembly, it is still computationally complex, as gigabytes or
+terabytes of reads must each be mapped onto the reference genome, which can 
+range from millions (for bacteria) to billions (for mammals).
+
+Standard techniques for reference-based read mapping rely on algorithmic 
+approaches such as the Burrows-Wheeler transform (BWT)~\cite{burrows1994block}, 
+which provides efficient string 
 compression through a reversible transformation, while the FM-index data 
-structure~\cite{ferragina2000opportunistic} is a compressed substring index, based
-on the BWT, which provides efficient storage as well as fast search.
-Modern next-generation sequencing (NGS) technologies read short fragments of
-DNA, known as \emph{reads}~\ref{fig:shotgun}, which must be mapped onto a reference sequence~\ref{fig:ngs-pipeline}
+structure~\cite{ferragina2000opportunistic} is a compressed substring index, 
+based on the BWT, which provides efficient storage as well as fast search.
 BWA (Burrows-Wheeler Aligner)~\cite{li2009fast} uses the BWT, while the 
-Bowtie2~\cite{langmead2012fast} aligner further relies on the FM-index for efficient 
-mapping of NGS reads.
+Bowtie2~\cite{langmead2012fast} aligner further relies on the FM-index for 
+efficient mapping of NGS reads.
+The Genome Multitool (GEM) mapper~\cite{marco2012gem} also uses an FM-index 
+coupled with dynamic programming in a compressed representation, in order to 
+prune the search space when mapping reads to a reference genome.
+Masai~\cite{siragusa2013fast} uses an ``approximate seed'' approach to indexing
+the space of possible matches, likewise pruning the search space.
+Even with these approaches, read mapping remains a significant bottleneck in
+genomic research~\cite{hach2010mrsfast}.
 
 
 
@@ -248,53 +355,31 @@ mapping of NGS reads.
 \label{fig:ngs}
 \end{figure}
 
-As biological sequence data is string data, it is frequently useful to index or
-count instances of $k$-mers of a fixed length, $k$.
-Search tools such as BLAST~\cite{altschul1990basic} rely on $k$-mer \emph{seeds} in a 
-seed-and-extend approach to sequence search and alignment.
-For counting $k$-mer frequencies, Jellyfish~\cite{marccais2011fast} relies on an efficient
-hash-table encoding as well as Intel's ``compare-and-swap'' CPU instructions for
-improved run-time performance.
+Given a sequenced genome, the next natural questions are what genes (genomic
+regions that code for proteins) are present, what structure each resulting
+protein takes, and what biological function it performs.
+Identifying likely genes is a well-studied problem~\cite{burge1998finding} 
+beyond the scope of this Review.
+However, determining evolutionary relationships, structure, and function are
+at the heart of current research in computational biology.
+Since some organisms (known as \emph{model organisms}) are better-studied than
+others, and evolution is known to conserve sequence, structure, and function,
+a powerful approach to determine these attributes is to search for similar
+sequences about which more is known.
+This so-called \emph{homology search} entails searching for \emph{approximate}
+matches in databases of known gene or protein sequences.
 
-Seeking to take advantage of sequence redundancy, \cite{loh2012compressive}
-introduced \emph{compressive genomics}, an approach that relies on compressing
-data in such a way that the desired computation (such as BLAST search) can be
-performed in the compressed representation.
-This approach relies on a two-stage search, referred to as \emph{coarse} and \emph{fine} search.
-Coarse search is performed only on the coarse, or representative, subsequences
-that represent unique data.
-Any coarse sequence that is within some threshold of the query is then expanded 
-into all the similar sequences it represents; the fine search is then over this
-(typically small) subset of the original database.
-This approach provides run-time improvements to BLAST search on 
-nucleotide~\cite{loh2012compressive} and protein~\cite{daniels2013compressive}
-data; moreover, these run-time improvements increase as databases grow.
-Also taking advantage of sequence redundancy, Mince~\cite{patro2015data} groups 
-similar reads (those that share a common 
-substring) together into ``buckets'', allowing that common substring to now be 
-removed and treated as the bucket label, so that each read in the compressed 
-representation comprises only its unique differences from the bucket label.
-This allows a general-purpose compressor to achieve tight compression.
-SCALCE~\cite{hach2012scalce} also relies on a ``boosting'' scheme, reordering
-reads in such a way that a general-purpose compressor achieves improved
-compression ratios.
+Basic Local Alignment Search Tool (BLAST)~\cite{altschul1990basic} has been
+the standard too for performing homology search on databases of nucleotide and
+protein sequences.
+BLAST takes a ``seed-and-extend'' approach; it looks for small, $k$-mer matches
+that might lead to longer matches, and greedily extends them, ultimately 
+producing a \emph{sequence alignment} between a query and each potential 
+database hit.
+However, BLAST's running time is linear in the size of the database being
+searched, which is problematic as sequence databases continue to grow at a
+faster rate than Moore's law.
 
-Along with a genome sequence, modern sequencing systems provide a measure of
-the quality of, or confidence in, the nucleotide base read at every position.
-While nucleotides reside in a 4-letter alphabet, na\"ively representable in two 
-bits per position, these quality scores occupy a larger range, na\"ively
-requiring six or seven bits per position.
-Thus, quality scores offer low-hanging fruit with respect to compression for 
-storage and transmission of sequence data.
-Several approaches to compressing quality scores have been 
-presented~\cite{janin2013adaptive,bonfield2013compression,ochoa2013qualcomp,yu2015quality}.
-Quartz~\cite{yu2015quality} takes the unusual approach of applying lossy 
-compression, by bounding the likelihood that a quality score is informative.
-Surprisingly, Quartz not only demonstrates improved compression over competing
-approaches, but slightly improves the accuracy of downstream variant-calling.
-
-The idea of taking advantage of redundancy in sequence data is particularly
-important in the face of new sources of data.
 Driven by the plummeting costs of next-generation sequencing, the 1000 Genomes Project~\cite{10002012integrated} is pursuing a broad catalog of human 
 variation; instead of producing a single reference genome for a species, many
 complete genomes are catalogued.
@@ -313,47 +398,21 @@ including Autism Spectrum Disorder~\cite{macfabe2012short},
 Crohn's Disease~\cite{gevers2014treatment,manichanh2006reduced}, and 
 obesity~\cite{greenblum2012metagenomic}.
 
-The continued ability to search and analyze these growing data sets hinges on
-clever algorithms that take advantage of the structure of, and redundancy 
-present in, the data.
-Indeed, these growing data sets ``threaten to make the arising problems 
-computationally infeasible.''~\cite{berger2013computational}
-
-One approach to more quickly searching these data sets is to come up with an
-indexing technique that leverages domain knowledge about the structure of the
-data.
-In the realm of NGS read mapping, the Genome Multitool (GEM)
-mapper~\cite{marco2012gem} makes use of a Ferragina-Manzini 
-index~\cite{ferragina2000opportunistic} coupled with dynamic programming in
-a compressed representation, in order to prune the search space when mapping
-reads to a reference genome.
-Masai~\cite{siragusa2013fast} uses an ``approximate seed'' approach to indexing
-the space of possible matches, likewise pruning the search space.
-
-Another approach is to make use of a completely different paradigm for the 
-structure of biological data. 
-By combining redundancy with a low fractal 
-dimension~\cite{yu2015entropy}, it may be possible to develop algorithms that 
-scale even as the data continue to grow.
-The CORA read mapper~\cite{yorukoglu2015compressive} applies a $k$-mer based 
-read-compression approach with a compressive indexing of the reference genome
-(referred to as a homology table).
-Short seed-clustering schemes, such as those used in Masai and 
-MrsFAST~\cite{hach2010mrsfast} conceptually differ from CORA in that those 
-schemes aim to accelerate only the seed-to-reference matching step.
-Thus, there is a subsequent seed-extension step, which is substantially more 
-costly and still needs to be performed for each read and mapping individually, 
-even when seeds are clustered. 
-Through its k-mer based read compression model, CORA is able to accelerate and 
-achieve asymptotically sublinear scaling for both the seed-matching and 
-seed-extension steps within coarse-mapping, which comprises the major bulk of 
-the read-mapping computation.
-
-In the realm of metagenomic search, BLASTX~\cite{altschul1990basic} is commonly
+Metagenomics fundamentally asks what organisms are present, and (in the case
+of a microbiome such as the gut) what metabolic functions it can accomplish as
+a whole.
+One approach to this is to attempt to map NGS reads from a metagenomic sample
+onto a set of reference genomes that are expected to be present.
+This is exactly the read-mapping problem discussed above, but with many 
+reference genomes, compounding the computational requirements.
+A second approach is to perform homology search on a protein sequence database;
+exact or nearly-exact matches imply the presence of a species, while more 
+distant hits may still give clues to function.
+For this task, BLASTX~\cite{altschul1990basic} is commonly
 used to translate nucleotide reads into their possible protein sequences, and
 search for them in a protein database.
-Recent advances in metagenomic search tools have relied on three advances over
-BLASTX: indexing, alphabet reduction, and compression.
+Recent advances in metagenomic search tools have relied on two advances over
+BLASTX: indexing and alphabet reduction.
 RapSearch2~\cite{zhao2012rapsearch2} relies on alphabet reduction and a 
 collision-free hash table.
 The alphabet reduction, as it is reversible, can be thought of as a form of
@@ -363,17 +422,24 @@ alphabet.
 The hash-table provides an efficient index of the database to be searched.
 DIAMOND~\cite{buchfink2014fast} also relies on alphabet reduction, but uses
 ``shaped seeds'' instead of simple $k$-mer seeds to index the database.
+DIAMOND demonstrates search performance three to four orders of magnitude faster
+than BLASTX, but it is still linear in the size of the database being searched.
 
-The recently-released MICA~\cite{yu2015entropy} demonstrates that the 
-compressive-acceleration approach of 
-caBLAST~\cite{loh2012compressive} and caBLASTP~\cite{daniels2013compressive} is 
-largely orthogonal to alphabet-reduction and indexing approaches.
-MICA applies the compressive-acceleration framework to DIAMOND, using DIAMOND
-for its ``coarse search'' phase and a user's choice of DIAMOND or BLASTX for its
-``fine search'' phase; it demonstrates comparable run-time gains over DIAMOND as
-caBLASTP does over BLASTP.
-
-\section{Non-sequence data}
+Over the course of evolutionary time, structure is known to be more highly 
+conserved than sequence~\cite{illergaard2009structure}, which is to say that it 
+does not change as rapidly.
+When the structure of a protein is known but its biological function or 
+evolutionary relationships are not, researchers may search for structurally
+similar proteins that are better studied~\cite{gibrat1996surprising}.
+Classical tools for this involve performing pairwise structural alignments to
+look for geometric similarity; DALI~\cite{holm1995dali} is still widely used,
+along with other aligners such as FATCAT~\cite{ye2004fatcat} and 
+Matt~\cite{menke2008matt}.
+FragBag~\cite{budowski2010fragbag} accelerates protein structure search by
+approximating structural alignments, which can be computationally demanding,
+by instead comparing the ``bag-of-words'' from each structure.
+Analogous to a term-frequency vector in information retrieval, this bag-of-words
+indicates the abundance of particular, short structural motifs within a protein.
 
 Another important type of biological data is gene expression, or the quantity of
 a particular gene product (usually a protein) present in the cell.
@@ -434,17 +500,66 @@ network in such a way that function annotation can be performed in the reduced
 space, significantly reducing running time while still providing competitive
 prediction accuracy.
 
-In the realm of protein structure prediction, it has been 
-observed~\cite{dunbrack2002rotamer} that rather than exploring the continuous 
-range of
-possible dihedral angles, protein structures inhabit a smaller subspace, defined
-by a narrower range of angles, referred to as 
-rotamers~\cite{dunbrack1993backbone}.
-The TreePack algorithm~\cite{xu2006fast} takes advantage of this observation 
-for the
-purpose of sidechain packing (finding the lowest-energy conformation for the
-sidechain of each amino acid), using tree width to reduce the search space and
-simplify dependencies.
+The continued ability to search and analyze these growing data sets hinges on
+clever algorithms that take advantage of the structure of, and redundancy 
+present in, the data.
+Indeed, these growing data sets ``threaten to make the arising problems 
+computationally infeasible.''~\cite{berger2013computational}
+
+
+\section{Compressive omics}
+
+Another approach is to make use of a completely different paradigm for the 
+structure of biological data.
+Much biological data is highly redundant; if a computation is performed on one
+human genome, and a researcher wishes to perform the same computation on another
+human genome, most of the work has already been done.
+
+Seeking to take advantage of the redundancy inherent in genomic sequence data, 
+\cite{loh2012compressive}
+introduced \emph{compressive genomics}, an approach that relies on compressing
+data in such a way that the desired computation (such as BLAST search) can be
+performed in the compressed representation.
+This approach relies on a two-stage search, referred to as \emph{coarse} and \emph{fine} search.
+Coarse search is performed only on the coarse, or representative, subsequences
+that represent unique data.
+Any coarse sequence that is within some threshold of the query is then expanded 
+into all the similar sequences it represents; the fine search is then over this
+(typically small) subset of the original database.
+This approach provides run-time improvements to BLAST search on 
+nucleotide~\cite{loh2012compressive} and protein~\cite{daniels2013compressive}
+data; moreover, these run-time improvements increase as databases grow.
+
+
+The CORA read mapper~\cite{yorukoglu2015compressive} applies an $l$-mer based 
+read-compression approach with a compressive indexing of the reference genome
+(referred to as a homology table).
+CORA, like caBLAST and caBLASTP, accelerates existing tools (in this case, read
+mappers including BWA, and Bowtie2) by allowing them to operate in a compressed
+space, and relying on a coarse and a fine phase.
+Short seed-clustering schemes, such as those used in Masai~\cite{siragusa2013fast} and 
+MrsFAST~\cite{hach2010mrsfast} conceptually differ from CORA in that those 
+schemes aim to accelerate only the seed-to-reference matching step.
+Thus, there is a subsequent seed-extension step, which is substantially more 
+costly and still needs to be performed for each read and mapping individually, 
+even when seeds are clustered. 
+Through its k-mer based read compression model, CORA is able to accelerate and 
+achieve asymptotically sublinear scaling for both the seed-matching and 
+seed-extension steps within coarse-mapping, which comprises the major bulk of 
+the read-mapping computation.
+
+NEED TO DISCUSS $l$-mers here.
+
+In the area of metagenomic search,
+the recently-released MICA~\cite{yu2015entropy} demonstrates that the 
+compressive-acceleration approach of 
+caBLAST~\cite{loh2012compressive} and caBLASTP~\cite{daniels2013compressive} is 
+largely orthogonal to alphabet-reduction and indexing approaches.
+MICA applies the compressive-acceleration framework to 
+DIAMOND~\cite{buchfink2014fast}, using DIAMOND
+for its ``coarse search'' phase and a user's choice of DIAMOND or BLASTX for its
+``fine search'' phase; it demonstrates comparable run-time gains over DIAMOND as
+caBLASTP does over BLASTP.
 
 The compressive acceleration approach of \cite{loh2012compressive} has been
 generalized and adapted to non-sequence spaces as well.
@@ -462,22 +577,140 @@ on the size and complexity of the graphs in question.
 Applying a compressive acceleration approach, Ammolite~\cite{yu2015entropy}
 accelerates SMSD search by an average of 150x on the PubChem database.
 
-When the structure of a protein is known but its biological function or 
-evolutionary relationships are not, researchers may search for structurally
-similar proteins that are better studied~\cite{gibrat1996surprising}.
-Classical tools for this involve performing pairwise structural alignments to
-look for geometric similarity; DALI~\cite{holm1995dali} is still widely used,
-along with other aligners such as FATCAT~\cite{ye2004fatcat} and 
-Matt~\cite{menke2008matt}.
-FragBag~\cite{budowski2010fragbag} accelerates protein structure search by
-approximating structural alignments, which can be computationally demanding,
-by instead comparing the ``bag-of-words'' from each structure.
-Analogous to a term-frequency vector in information retrieval, this bag-of-words
-indicates the abundance of particular, short structural motifs within a protein.
+
 Again applying a compressive acceleration approach, 
 esFragBag~\cite{yu2015entropy} clusters proteins based on the cosine distance or
 Euclidean distance of their bag-of-words vectors, further accelerating FragBag's
 running time by an average of 10x.
+
+\section{Structure of biological data}
+
+Cluster-based search is well-studied~\cite{jardine1971use}, but conventional
+wisdom holds that it provides a constant factor speed-up over exhaustive search.
+However, \cite{daniels2013compressive} observed that caBLASTP demonstrated
+increased gains over BLASTP on newer, larger protein databases, suggesting that
+compressive acceleration takes advantage of ever-increasing redundancy in the
+data.
+Beyond redundancy, however, another attribute of large biological data sets
+stands out.
+Any high-dimensional data set, such as amino acid sequences of a bounded 
+length, can be described as inhabiting a vector space.
+For example, given an alphabet of 20 amino acids and a length bounded at 
+500\footnote{While the largest-known protein, titin, is over 33,000 amino acids 
+in length, proteins are typically described as comprising \emph{domains} that 
+evolve and fold independently; domains rarely exceed 500 amino acids.}, one 
+could
+enumerate $20^{500} \approx 3 \times 10^{650}$ distinct protein sequences, as 
+of July 
+2015, the NCBI's exhaustive ``NR'' database lists $6.9 \times 10^{7}$ sequences.
+This is not simply due to undersampling; thanks to evolution, only those protein
+sequences which exhibit useful biological function should survive, and most
+random sequences of amino acids would not be expected to form stable structures.
+Thus, not only do biological data exhibit redundancy, they also tend not to 
+inhabit the entire feasible space.
+It seems that physical laws have constrained the data to a particular subspace
+of the enumerable Cartesian space.
+
+One key insight as to why the ``compressive omics'' approach allows computation
+that scales sublinearly in the size of the data is that such data sets exhibit
+low \emph{metric entropy}~\cite{yu2015entropy}.
+That is, for a given cluster radius $r_c$ and a database $D$, the number 
+$N_{r_c} (D)$ of clusters needed to cover $D$ is relatively small compared to
+$|D|$, the number of entries in the database.
+In contrast, if the points were uniformly distributed about the Cartesian space,
+$N_{r_c} (D)$ would be larger.
+
+A second key insight is that the biological data sets considered 
+by~\cite{yu2015entropy} exhibit low \emph{fractal dimension}.
+That is, for some range of radii $r_1$ and $r_2$, 
+
+discrete?
+
+By combining redundancy with a low fractal 
+dimension~\cite{yu2015entropy}, it may be possible to develop algorithms that 
+scale even as the data continue to grow.
+
+wherever physical or empirical laws have constrained data to 
+a subspace of low entropy and fractal dimension.
+
+
+
+Specifically, the ratio $\frac{|D|}{k}$ provides an estimate of the acceleration factor
+for just the coarse search component compared to a full linear search.
+Local fractal dimension around a data point can be computed by determining the
+number of other data points within two radii $r_1$ and $r_2$ of that point;
+given those point counts ($n_1$ and $n_2$, respectively), fractal dimension $d$
+is simply $d=\frac{\log (n_2 / n_1)}{ \log (r_2 / r_1)}$.
+Sampling this property over a dataset can provide a global average fractal 
+dimension.
+When we search a larger radius around a query, the number of points we encounter grows exponentially with the fractal dimension;
+low fractal dimension implies that this growth will not obviate the gains provided by an entropy-scaling data structure.
+
+An entropy-scaling search tree is also related to a metric ball tree~\cite{uhlmann1991satisfying}, although with different time complexity.
+Querying a metric ball tree requires $O(\log n)$ time, assuming the relatively uniform distribution of data points in a metric space.
+This is different from the nonuniform distribution under which entropy-scaling
+search behaves well.
+
+\begin{table}
+\caption{Metric entropy ratio (ratio of clusters to entries in database) and
+fractal dimension at typical search radii for four biological data sets.
+NCBI's ``NR'' non-redundant protein sequence and ``NT'' non-redundant nucleotide sequence databases are from June, 2015. Protein Databank (PDB) is from July, 2015. PubChem is from October, 2013.}
+\begin{tabular}{ccc}
+\hline
+Data set & Metric entropy ratio & Fractal dimension \\        
+\hline
+Nucleotide sequences (NCBI NT) & 7:1 & 1.5\\
+\hline
+Protein sequences (NCBI NR) & 5:1 & 1.6\\
+\hline
+Protein structure (PDB) & 10:1 & 2.5\\
+\hline
+Chemical structure (PubChem) & 11:1 & 0.2\\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Storage compression}
+
+Along with a genome sequence, modern sequencing systems provide a measure of
+the quality of, or confidence in, the nucleotide base read at every position.
+While nucleotides reside in a 4-letter alphabet, na\"ively representable in two 
+bits per position, these quality scores occupy a larger range, na\"ively
+requiring six or seven bits per position.
+Thus, quality scores offer low-hanging fruit with respect to compression for 
+storage and transmission of sequence data.
+Several approaches to compressing quality scores have been 
+presented~\cite{janin2013adaptive,bonfield2013compression,ochoa2013qualcomp,yu2015quality}.
+Quartz~\cite{yu2015quality} takes the unusual approach of applying lossy 
+compression, by bounding the likelihood that a quality score is informative.
+Surprisingly, Quartz not only demonstrates improved compression over competing
+approaches, but slightly improves the accuracy of downstream variant-calling.
+
+Also taking advantage of sequence redundancy, Mince~\cite{patro2015data} groups 
+similar reads (those that share a common 
+substring) together into ``buckets'', allowing that common substring to now be 
+removed and treated as the bucket label, so that each read in the compressed 
+representation comprises only its unique differences from the bucket label.
+This allows a general-purpose compressor to achieve tight compression.
+SCALCE~\cite{hach2012scalce} also relies on a ``boosting'' scheme, reordering
+reads in such a way that a general-purpose compressor achieves improved
+compression ratios.
+
+
+
+% In the realm of protein structure prediction, it has been
+% observed~\cite{dunbrack2002rotamer} that rather than exploring the continuous
+% range of
+% possible dihedral angles, protein structures inhabit a smaller subspace, defined
+% by a narrower range of angles, referred to as
+% rotamers~\cite{dunbrack1993backbone}.
+% The TreePack algorithm~\cite{xu2006fast} takes advantage of this observation
+% for the
+% purpose of sidechain packing (finding the lowest-energy conformation for the
+% sidechain of each amino acid), using tree width to reduce the search space and
+% simplify dependencies.
+
+
 
 \section{Conclusions and future prospects}
 
@@ -517,30 +750,12 @@ biology, it is also essential that techniques continue to make better
 predictions and models that demonstrate improved fidelity to wet-lab 
 experiments.
 
-\begin{table}
-\caption{Metric entropy ratio (ratio of clusters to entries in database) and
-fractal dimension at typical search radii for four biological data sets.
-NCBI's ``NR'' non-redundant protein sequence and ``NT'' non-redundant nucleotide sequence databases are from June, 2015. Protein Databank (PDB) is from July, 2015. PubChem is from October, 2013.}
-\begin{tabular}{ccc}
-\hline
-Data set & Metric entropy ratio & Fractal dimension \\        
-\hline
-Nucleotide sequences (NCBI NT) & 7:1 & 1.5\\
-\hline
-Protein sequences (NCBI NR) & 5:1 & 1.6\\
-\hline
-Protein structure (PDB) & 10:1 & 2.5\\
-\hline
-Chemical structure (PubChem) & 11:1 & 0.2\\
-\hline
-\end{tabular}
-\end{table}
 
 
 
 % Bibliography
-% \bibliographystyle{ACM-Reference-Format-Journals}
-\bibliographystyle{abbrv}
+\bibliographystyle{ACM-Reference-Format-Journals}
+% \bibliographystyle{abbrv}
 \bibliography{main}
 
 
