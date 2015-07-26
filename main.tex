@@ -190,7 +190,7 @@ Amazon Web Services are also commonly used for computational biology
 research and enterprise (e.g., DNANexus)~\cite{schatz2010cloud}.
 However, while cloud computing frees researchers from maintaining their own
 data centers, and provides cost-saving benefits when computing resources are
-not needed around the clock, it is no panacea.
+not needed continuously, it is no panacea.
 First and foremost, cloud computing does not truly address the problem posed by
 a corpus of data that is growing faster than Moore's law, because the computer
 systems that make up those cloud datacenters are still themselves bound by
@@ -221,16 +221,16 @@ focus.
 In the central dogma of molecular biology, DNA is transcribed into RNA, which
 is translated by the ribosome into a polypeptide chain, a sequence of amino 
 acids, known as a protein.
-This protein folds into a complex, low-energy structure, and functions as
-a cellular machine itself; the DNA sequence determines the amino acid sequence,
+This protein folds into a complex, low-energy structure, which functions as
+a cellular machine; the DNA sequence determines the amino acid sequence,
 which in turn determines the folded structure of the protein.
 This structure ultimately determines the protein's function within the cell.
-Certain kinds of RNA also importantly function, sometimes with proteins, as cellular 
+Certain kinds of RNA also function, sometimes with proteins, as cellular 
 machines.
 Thus, researchers are interested in DNA, RNA, and protein sequences, as well
 as the structures that RNA and proteins form.
 Researchers also study the resulting functions of RNA and proteins, in what
-abundance they occur (this is known as gene expression), and how they interact
+abundance they occur (gene expression), and how they interact
 with each other (interaction networks).
 
 Most but not all biological data take the form of \emph{sequence} data, either 
@@ -239,17 +239,17 @@ DNA or RNA bases) or protein sequences (nominally a twenty-letter alphabet
 representing the twenty standard amino acids).
 Sequence data are obtained in several ways, including mass spectrometry (which
 can determine protein sequence, as well as interactions) and RNA-seq (which can determine RNA sequence, 
-and by inference the expression  of the gene it might translate).
+and by inference the expression of the gene to which it might translate).
 However, the greatest volume of sequence data derive from next-generation 
-sequencing (commonly abbreviated NGS) technologies, and comprise DNA sequences.
+sequencing (NGS) technologies, and comprise DNA sequences.
 At the dawn of the genomic era, Sanger sequencing was the most widely-used 
 method.
 Slow and labor intensive but well-tested, Sanger sequencing is still used to 
 validate NGS results.
 More recently, Sanger sequencing has largely been supplanted by NGS approaches,
 beginning with Illumina's ``sequencing by synthesis,'' which allows vastly 
-greater throughput due to massive parallelism, low cost, and simple preparation
-of samples.
+greater throughput due to massive parallelism, low cost, and simple sample
+preparation.
 Importantly to this Review, Illumina sequencing, as well as other approaches
 such as SOLiD, Ion Torrent, and 454 pyrosequencing, does not read a single DNA
 molecule end-to-end as one could a file from a hard drive.
