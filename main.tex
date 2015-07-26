@@ -143,7 +143,7 @@ microarrays, nuclear magnetic resonance, and other high-throughput approaches
 have led to an explosion of data.
 This explosion of data is a mixed blessing.
 On the one hand, the scale and scope of data should allow new insights into
-genetic and infections diseases, cancer, basic biology, and even human migration
+genetic and infectious diseases, cancer, basic biology, and even human migration
 patterns.
 On the other hand, researchers are generating datasets so massive that it has 
 become difficult to analyze them to discover patterns that give clues to the 
@@ -209,7 +209,7 @@ Now-classical approaches such as principal component analysis (PCA) reduce the
 dimensionality of data in order to simplify analysis and uncover salient 
 features~\cite{berger2013computational}.
 As another example, clever indexing techniques such as the Burroughs-Wheeler 
-Transform (BWT) also take advantage of aspects of sequence 
+Transform (BWT) take advantage of aspects of sequence 
 data~\cite{berger2013computational} to speed up computation and save storage.
 This review focuses on cutting-edge algorithmic advances for dealing with the growth in 
 biological data by explicitly taking advantage of its unique structure; algorithms for gaining novel biological insights are not its 
@@ -224,7 +224,7 @@ This protein folds into a complex, low-energy structure, and functions as
 a cellular machine itself; the DNA sequence determines the amino acid sequence,
 which in turn determines the folded structure of the protein.
 This structure ultimately determines the protein's function within the cell.
-Certain kinds of RNA also function, sometimes with proteins, as cellular 
+Certain kinds of RNA also importantly function, sometimes with proteins, as cellular 
 machines.
 Thus, researchers are interested in DNA, RNA, and protein sequences, as well
 as the structures that RNA and proteins form.
@@ -252,9 +252,10 @@ of samples.
 Importantly to this Review, Illumina sequencing, as well as other approaches
 such as SOLiD, Ion Torrent, and 454 pyrosequencing, does not read a single DNA
 molecule end-to-end as one could a file from a hard drive.
-Instead, DNA molecules are chopped into many small fragments, or 
-\emph{reads} (Figure~\ref{fig:shotgun}), 
-which are read concurrently, and which must be reassembled in the correct order 
+Instead, DNA molecules are chopped into many small fragments;
+from these we can measure 
+\emph{reads} from one or both ends (Figure~\ref{fig:shotgun}).
+These reads are read concurrently and must be reassembled in the correct order 
 if an entire genome is to be read.
 Current reads most typically range from 50 to 200 bases long, though longer reads are
 available with some technologies (e.g., PacBio).
@@ -272,7 +273,7 @@ A sequencing run will produce many of these reads, typically stored in a FASTQ
 file.
 
 Another important type of biological data is gene expression, or the quantity of
-a particular gene product (usually a protein) present in the cell.
+a particular gene product (usually a protein and more recently RNA) present in the cell.
 Gene expression data is useful for relating genotype to phenotype, and is 
 important in studying diseases including cancer.
 Usually obtained through microarrays or RNA-seq technologies, expression data is
@@ -280,7 +281,7 @@ quantitative, as each gene from a sample is associated with a numeric expression
 level, and high-dimensional, as many thousands of genes may be analyzed at a
 time.
 
-Protein structure, primarily determined through X-ray crystallography or
+Protein structure data, primarily determined through X-ray crystallography or
 nuclear magnetic resonance (NMR), describes the coordinates of each atom, in 
 Angstroms, of a protein in three-dimensional space.
 This information is important to understanding how a protein functions, because
@@ -304,7 +305,7 @@ Chemical compounds are stored in databases such as PubChem, and can be described
 as adjacency matrices.
 
 Networks are frequently used to represent biological data, such as the genetic
-and physical interactions among proteins, such as those in metabolic 
+and physical interactions among proteins, as well as those in metabolic 
 pathways~\cite{berger2013computational}.
 
 \section{Challenges with biological data}
@@ -320,7 +321,7 @@ Often, however, a \emph{reference genome} (or in the case of RNA,
 \emph{transcriptome}) is available for the organism being sequenced; the
 establishment of a human reference genome was indeed the purpose of the Human
 Genome Project.
-When a reference sequence is available, NGS reads must be \emph{mapped} onto
+When a reference sequence is available, NGS reads can be \emph{mapped} onto
 this reference (Figure~\ref{fig:ngs-pipeline}).
 Mapping allows the differences between the newly-sequenced genome and the reference
 to be analyzed; these differences may include single-nucleotide polymorphisms
@@ -357,7 +358,7 @@ Identifying likely genes is a well-studied problem~\cite{burge1998finding}
 beyond the scope of this Review.
 However, determining evolutionary relationships, structure, and function are
 at the heart of current research in computational biology.
-Since some organisms (known as \emph{model organisms}) are better-studied than
+Since some organisms (known as \emph{model organisms}) are better studied than
 others, and evolution is known to conserve sequence, structure, and function,
 a powerful approach to determine these attributes is to search for similar
 sequences about which more is known.
@@ -381,8 +382,9 @@ Likewise, WormBase~\cite{harris2014wormbase} and
 FlyBase~\cite{tweedie2009flybase} are cataloguing many different species and
 strains of the \emph{Caenorhabditis} worm and \emph{Drosophila} fruit fly, 
 respectively.
-These genomes are enabling cross-species inference, and thus insights into 
+These genomes are enabling cross-species inference, for example about genes and regulatory regions, and thus insights into function and
 evolution~\cite{berger2013computational}.
+But as we saw earlier, their sheer growth is problematic for storage, access and analysis.
 
 On a potentially even larger scale is the growth of metagenomic data.
 Metagenomics is the study of the many genomes (bacterial, fungal, and even 
@@ -394,8 +396,8 @@ the human gut, whose microbiome has been linked to human-health concerns
 including Autism Spectrum Disorder~\cite{macfabe2012short}, 
 Crohn's Disease~\cite{gevers2014treatment,manichanh2006reduced}, and 
 obesity~\cite{greenblum2012metagenomic}.
-Metagenomics fundamentally asks what organisms are present, and (in the case
-of a microbiome such as the gut) what metabolic functions it can accomplish as
+Metagenomics fundamentally asks what organisms are present, and, in the case
+of a microbiome such as the gut, what metabolic functions it can accomplish as
 a whole.
 One way of addressing this problem is to attempt to map NGS reads from a metagenomic sample
 onto a set of reference genomes that are expected to be present.
@@ -410,8 +412,9 @@ search for them in a protein database.
 The difficulty is that the datasets required to shine any light on these 
 questions, namely from ``shotgun'' metagenomics, are gigantic and vastly more 
 complex than 16S metagenomic studies that merely classify the bacteria based on 
-their divergence with respect to a specific gene, resulting in identification 
-problems for certain bacterial, as well as viral, species and 
+their divergence with respect to a specific gene.
+The massive data results in major identification 
+challenges for certain bacterial, as well as viral, species and 
 genera~\cite{janda200716s}. 
 
 While gene expression data lends itself to cluster analysis and probabilistic 
@@ -420,6 +423,9 @@ challenges~\cite{nguyen2002tumor}.
 Principal Component Analysis has shown promise in reducing the dimensionality
 of gene expression 
 data~\cite{raychaudhuri2000principal,alter2000singular,yeung2001principal,misra2002interactive}.
+Such data and its challenges has been the focus of other 
+articles~\cite{berger2013computational}, and thus will be only lightly touched 
+upon here.
 
 Over the course of evolutionary time, structure is known to be more highly 
 conserved than sequence~\cite{illergaard2009structure}, which is to say that it 
@@ -436,6 +442,8 @@ approximating structural alignments, which can be computationally demanding,
 by instead comparing the ``bag-of-words'' from each structure.
 Analogous to a term-frequency vector in information retrieval, this bag-of-words
 indicates the abundance of particular, short structural motifs within a protein.
+%What are the challenges with this data?
+
 
 The study of drugs and their targets based on chemical structure and function
 is known as chemogenomics~\cite{bredel2004chemogenomics}.
@@ -461,7 +469,7 @@ As new functional annotations and protein-protein interactions are discovered,
 the number and size of these networks grows, making related problems more 
 intractable~\cite{berger2013computational}.
 
-The continued ability to search and analyze these growing data sets hinges on
+The continued ability to store, search, and analyze these growing data sets hinges on
 clever algorithms that take advantage of the structure of, and redundancy 
 present in, the data.
 Indeed, these growing data sets ``threaten to make the arising problems 
@@ -570,12 +578,16 @@ schemes aim to accelerate only the seed-to-reference matching step.
 Thus, there is a subsequent seed-extension step, which is substantially more 
 costly and still needs to be performed for each read and mapping individually, 
 even when seeds are clustered. 
-Through its k-mer based read compression model, CORA is able to accelerate and 
+Through its $l$-mer based read compression model, CORA is able to accelerate 
+and 
 achieve asymptotically sublinear scaling for both the seed-matching and 
 seed-extension steps within coarse-mapping, which comprises the major bulk of 
 the read-mapping computation.
-
-NEED TO DISCUSS $l$-mers here.
+Traditionally, $k$-mers refer to short substrings of fixed length (often, but 
+not necessarily, a power of two) used as ``seeds'' for longer sequence matches.
+CORA uses much longer $k$-mers, and links each one to its neighbors within
+a small Hamming or Levenshtein distance.
+The term $l$-mer distinguishes these substrings from typically-short $k$-mers.
 
 In the area of metagenomic search,
 the recently-released MICA~\cite{yu2015entropy} demonstrates that the 
@@ -603,7 +615,6 @@ One approach to this type of search is the Small Molecule Subgraph Detector
 on the size and complexity of the graphs in question.
 Applying a compressive acceleration approach, Ammolite~\cite{yu2015entropy}
 accelerates SMSD search by an average of 150x on the PubChem database.
-
 
 Again applying a compressive acceleration approach, 
 esFragBag~\cite{yu2015entropy} clusters proteins based on the cosine distance or
@@ -659,13 +670,13 @@ Cluster-based search, as exemplified by ``compressive omics,'' can perform
 approximate search within a radius $r$ of a query $q$ on a database $D$ with 
 fractal dimension $d$ and metric entropy $k$ at the scale $r_c$ in time
 proportional to
-\begin{gather*}
+\[
     O\Bigg(
     \underbrace{k}_{\textrm{metric entropy}} +
     \overbrace{\left|B_D(q,r)\right|}^{\textrm{output size}}
     \underbrace{\left(\frac{r+2r_c}{r}\right)^d}_{\textrm{scaling factor}}
      \Bigg) .
-\end{gather*}
+\]
 
 Given this formalization, the ratio $\frac{|D|}{k}$ provides an estimate of the 
 speed-up factor for the coarse search component compared to a full linear 
