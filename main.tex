@@ -189,7 +189,7 @@ researchers is increasing by a factor of ten every year.
 \includegraphics[width=2.8in]{assets/kryder.png}
 \label{fig:kryder}
 }
-\caption[Sequencing vs. Storage]{Moore's (a) and Kryder's (b) laws contrasted with genomic sequence data}
+\caption[Sequencing vs. Storage]{(a) Moore's and (b) Kryder's laws contrasted with genomic sequence data}
 % YWY: My inclination is to write "(a) Moore's and (b) Kryder's laws". Possibly a matter of taste though, so do as you will.
 \label{fig:growth}
 \end{figure}
@@ -266,7 +266,7 @@ method for reading a genome.
 Though slow and labor intensive, Sanger sequencing has the advantage of being
 well-tested and is still used to validate NGS results.
 More recently, however, Sanger sequencing has largely been supplanted by NGS approaches,
-beginning with Illumina's ``sequencing by synthesis,'' which allows vastly 
+beginning with Illumina's `sequencing by synthesis,' which allows vastly 
 greater throughput due to massive parallelism, low cost, and simple sample
 preparation.
 
@@ -280,7 +280,7 @@ These reads are read concurrently and must be reassembled in the correct order
 to piece together an entire genome.
 Current reads typically range from 50 to 200 bases long, though longer reads are
 available with some technologies (e.g., PacBio).
-This so-called ``shotgun sequencing'' is analogous to the problem of 
+This so-called `shotgun sequencing' is analogous to the problem of 
 reconstructing a book with all its pages torn out.
 However, these NGS reads overlap, and they are many in number, so 
 reconstructing an entire genome is feasible.
@@ -381,11 +381,11 @@ As read mapping is typically the most costly step in NGS analysis pipelines (e.g
 % YWY: Take spell-check lines out of figure labels! (bp, Samtools)
 \begin{figure}[htb!]
 \centering
-\subfloat[``Shotgun'' sequencing breaks DNA molecules into many short fragments, which are read from one or both ends in the form of {\em reads,\/} and relies on high coverage to produce a statistically likely representation of a whole genome]{
+\subfloat[`Shotgun' sequencing breaks DNA molecules into many short fragments, which are read from one or both ends in the form of {\em reads,\/} and relies on high coverage to produce a statistically likely representation of a whole genome]{
 \includegraphics[width=2.6in]{assets/shotgun.png}
 \label{fig:shotgun}
 }
-\subfloat[Single-nucleotide polymorphisms, or SNPs, are the simplest type of genomic variant, and form the bulk of ``variant-calling'' analysis]{
+\subfloat[Single-nucleotide polymorphisms, or SNPs, are the simplest type of genomic variant, and form the bulk of `variant-calling' analysis]{
 \includegraphics[width=2.6in]{assets/snps.png}
 \label{fig:snps}
 }\\
@@ -433,9 +433,11 @@ used to translate nucleotide reads into their possible protein sequences, and
 search for them in a protein database.
 % YWY: 16S isn't well introduced
 The difficulty is that the datasets required to shine any light on these 
-questions, namely from ``shotgun'' metagenomics, are gigantic and vastly more 
-complex than the 16S metagenomic studies that merely classify the bacteria based on 
-their divergence with respect to a specific gene.
+questions, namely from `shotgun' metagenomics, are gigantic and vastly more 
+complex than the 16S metagenomic studies that merely classify the bacteria 
+based on 
+their divergence with respect to a specific gene (namely, the 16S ribosomal 
+subunit).
 The massive data results in major identification 
 challenges for certain bacterial, as well as viral, species and 
 genera~\cite{janda200716s}. 
@@ -457,7 +459,7 @@ The homology search problem was previously believed to be solved;
 Basic Local Alignment Search Tool (BLAST)~\cite{altschul1990basic} had been
 the standard tool for performing homology (similarity) search on databases of nucleotide and
 protein sequences.
-BLAST takes a ``seed-and-extend'' approach; it looks for small, $k$-mer matches
+BLAST takes a `seed-and-extend' approach; it looks for small, $k$-mer matches
 that might lead to longer matches, and greedily extends them, ultimately 
 producing a \emph{sequence alignment} between a query and each potential 
 database hit.
@@ -492,7 +494,7 @@ For example, the DALI webserver can take as much as an hour to return results
 for a single query.
 FragBag~\cite{budowski2010fragbag} accelerates protein structure search by
 approximating structural alignments
-by instead comparing the ``bag-of-words'' from each structure.
+by instead comparing the `bag-of-words' from each structure.
 Analogous to a term-frequency vector in information retrieval, this bag-of-words
 indicates the abundance of particular, short structural motifs within a protein.
 
@@ -546,7 +548,7 @@ The Genome Multitool (GEM) mapper~\cite{marco2012gem} also uses an FM-index
 coupled with dynamic programming in a compressed representation of the 
 reference genome, in order to prune the search space 
 when mapping reads to a reference genome.
-Masai~\cite{siragusa2013fast} and mrsFAST \cite{hach2014mrsfast} use an ``approximate seed'' approach to indexing
+Masai~\cite{siragusa2013fast} and mrsFAST \cite{hach2014mrsfast} use an `approximate seed' approach to indexing
 the space of possible matches, likewise pruning the search space; however, the
 bulk of its runtime is spent on the extend phase.
 State-of-the-art mapper mrsFAST-Ultra achieves improvements in efficiency based on machine architecture rather than leveraging redundancy in the data itself with near-perfect sensitivity, but
@@ -564,7 +566,7 @@ alphabet, with offsets stored to recover the original sequence in the full
 alphabet.
 The hash-table provides an efficient index of the database to be searched.
 DIAMOND~\cite{buchfink2014fast} also relies on alphabet reduction, but uses
-``shaped seeds'' instead of simple $k$-mer seeds to index the database.
+`shaped seeds' instead of simple $k$-mer seeds to index the database.
 DIAMOND demonstrates search performance three to four orders of magnitude faster
 than BLASTX, but it is still linear in the size of the database being searched.
 
@@ -712,14 +714,14 @@ sequence, protein structure, and chemical compound databases.
 Biological data sets exhibit redundancy, and are constrained to subspaces by
 physical laws.
 This combination results in low fractal dimension and low metric entropy 
-relative to the size of the data set, which suggests that ``compressive omics''
+relative to the size of the data set, which suggests that `compressive omics'
 will provide the ability for computation to scale sublinearly with massively growing data.
 
 \begin{table}
 \label{fractal}
 \caption{Metric entropy ratio (ratio of clusters to entries in database) and
 fractal dimension at typical search radii for four biological data sets.
-NCBI's ``NR'' non-redundant protein sequence and ``NT'' non-redundant nucleotide sequence databases are from June, 2015. Protein Databank (PDB) is from July, 2015. PubChem is from October, 2013.}
+NCBI's `NR' non-redundant protein sequence and `NT' non-redundant nucleotide sequence databases are from June, 2015. Protein Databank (PDB) is from July, 2015. PubChem is from October, 2013.}
 \begin{tabular}{ccc}
 \hline
 Data set & Metric entropy ratio & Fractal dimension \\        
@@ -777,7 +779,7 @@ achieve asymptotically sublinear scaling for both the seed-matching and
 seed-extension steps within coarse-mapping, which comprises the major bulk of 
 the read-mapping computation.
 Traditionally, $k$-mers refer to short substrings of fixed length (often, but 
-not necessarily, a power of two) used as ``seeds'' for longer sequence matches.
+not necessarily, a power of two) used as `seeds' for longer sequence matches.
 CORA uses much longer $k$-mers (e.g., 33-64 nucleotides long), and links each one to its neighbors within
 a small Hamming or Levenshtein distance.
 The term $l$-mer distinguishes these substrings from typically-short $k$-mers.
@@ -789,12 +791,12 @@ caBLAST~\cite{loh2012compressive} and caBLASTP~\cite{daniels2013compressive} is
 largely orthogonal to alphabet-reduction and indexing approaches.
 MICA applies the compressive-acceleration framework to the
 state-of-the-art DIAMOND~\cite{buchfink2014fast}, using it
-for its ``coarse search'' phase and a user's choice of DIAMOND or BLASTX for its
-``fine search'' phase; MICA demonstrates nearly order-of-magnitude run-time gains over the highly-optimized DIAMOND, comparable to that of caBLASTP over BLASTP.
+for its `coarse search' phase and a user's choice of DIAMOND or BLASTX for its
+`fine search' phase; MICA demonstrates nearly order-of-magnitude run-time gains over the highly-optimized DIAMOND, comparable to that of caBLASTP over BLASTP.
 
 Compressive genomics \cite{loh2012compressive} has been
 generalized and adapted to non-sequence spaces as well, and coined
-``compressive omics''~\cite{yu2015entropy}.
+`compressive omics'~\cite{yu2015entropy}.
 One such example is chemogenomics.
 Applying a compressive acceleration approach, Ammolite~\cite{yu2015entropy}
 accelerates SMSD search by an average of 150x on the PubChem database.
@@ -823,11 +825,11 @@ approaches, but slightly improves the accuracy of downstream variant-calling.
 
 Also taking advantage of sequence redundancy, Mince~\cite{patro2015data} groups 
 similar reads (those that share a common 
-substring) together into ``buckets'', allowing that common substring to now be 
+substring) together into `buckets', allowing that common substring to now be 
 removed and treated as the bucket label, so that each read in the compressed 
 representation comprises only its unique differences from the bucket label.
 This approach allows a general-purpose compressor to achieve tight compression.
-SCALCE~\cite{hach2012scalce} also relies on a ``boosting'' scheme, reordering
+SCALCE~\cite{hach2012scalce} also relies on a `boosting' scheme, reordering
 reads in such a way that a general-purpose compressor achieves improved
 compression ratios.
 
@@ -875,8 +877,8 @@ ball tree, first described in the database community over twenty years
 ago~\cite{uhlmann1991satisfying};
 however, the latter does not allow one to analyze performance guarantees, 
 in terms of metric entropy and fractal dimension.
-Other ideas from image processing, computational geometry, sublinear-time algorithms~\cite{rubinfeld2011sublinear}, and other areas 
-outside of biology are likely to bear fruit~\cite{indyk1998approximate}. 
+Other ideas from image processing, computational geometry~\cite{indyk1998approximate}, sublinear-time algorithms~\cite{rubinfeld2011sublinear}, and other areas 
+outside of biology are likely to bear fruit. 
 In turn, it is also likely that algorithmic ideas developed within computational biology
 will become useful in other fields experiencing a data deluge, such as astronomy
 or social networks~\cite{stephens2015big}.
