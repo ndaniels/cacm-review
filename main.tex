@@ -15,6 +15,7 @@
 
 \usepackage{caption}
 \usepackage{subfig}
+\captionsetup[subfigure]{margin=5pt}
 
 % Metadata Information
 % \acmVolume{9}
@@ -42,10 +43,10 @@
 \begin{document}
 
 % Page heads
-\markboth{B. Berger et al.}{Title}
+\markboth{B. Berger et al.}{Computational biology in the 21st century: Algorithms that scale}
 
 % Title portion
-\title{Title}
+\title{Computational biology in the 21st century: Algorithms that scale}
 \author{BONNIE BERGER
 \affil{Massachusetts Institute of Technology}
 NOAH M. DANIELS
@@ -55,7 +56,18 @@ Y. WILLIAM YU
 
 
 \begin{abstract}
-abstract goes here
+Throughout all areas of data science, scientists are being confronted by a
+veritable explosion of available data. In many fields, this increase is
+exponential in nature, even outpacing Moore's and Kryder's laws on the
+respective doublings of transistors on a chip and long-term data storage
+density. As such, the challenges posed by the massive influx of data cannot
+be solved by waiting for faster and larger capacity computers, but require
+instead the development of data structures and representations that exploit
+and simplify complexity in the dataset. In this Review, we
+survey the biological data landscape, with a focus on how taking advantage
+of the structure of massive biological data enables the design of algorithms
+that scale sublinearly in large-scale genomics, personal genomics and
+chemogenomics.
 \end{abstract}
 
 
@@ -117,6 +129,8 @@ and Y. William Yu, 2015. Title.}
 % The remaining information (journal title, volume, article number, date, etc.) is 'auto-generated'.
 
 \begin{bottomstuff}
+This work is supported by the National Institutes of Health, under
+grant GM108348.
 % This work is supported by the National Science Foundation, under
 % grant CNS-0435060, grant CCR-0325197 and grant EN-CS-0329609.
 %
@@ -167,11 +181,11 @@ researchers is increasing by a factor of ten every year.
 \begin{figure}[htb!]
 \centering
 \subfloat[Growth of genomic sequence data (orange) as compared with the combined power of the top-500 supercomputer list (blue); y-axis is logarithmic]{
-\includegraphics[width=3.0in]{assets/moore.png}
+\includegraphics[width=2.8in]{assets/moore.png}
 \label{fig:moore}
-}\\
+}
 \subfloat[Growth of genomic sequence data (orange) as compared with hard drive capacity (blue); y-axis is logarithmic]{
-\includegraphics[width=3.0in]{assets/kryder.png}
+\includegraphics[width=2.8in]{assets/kryder.png}
 \label{fig:kryder}
 }
 \caption[Sequencing vs. Storage]{Moore's (a) and Kryder's (b) laws contrasted with genomic sequence data}
@@ -328,31 +342,40 @@ Often, however, a \emph{reference genome} (or in the case of RNA,
 \emph{transcriptome}) is available for the organism being sequenced; the
 establishment of a human reference genome was indeed the purpose of the Human
 Genome Project.
+
 When a reference sequence is available, NGS reads can be \emph{mapped} onto
 this reference (Figure~\ref{fig:ngs-pipeline}).
-Mapping allows the differences between the newly-sequenced genome and the reference
-to be analyzed; these differences may include single-nucleotide polymorphisms
+Mapping allows the differences between the newly-sequenced genome and the 
+reference to be analyzed; these differences, or variants, may include single-nucleotide polymorphisms
 (SNPs, which are the genetic analogue to bit-flips) (Figure~\ref{fig:snps}), 
 insertions or deletions, or larger-scale changes in the genome.
+Determining the differences between an individual genome and a reference is
+known as \emph{variant calling}.
 While reference-based read mapping is a fundamentally simpler problem than
 \emph{de novo} assembly, it is still computationally complex, as gigabytes or
 terabytes of reads must each be mapped onto the reference genome, which can 
 range from millions (for bacteria) to billions (for mammals).
-As read mapping is typically the most costly step in NGS analysis pipelines (e.g., GATK), any improvement to existing mappers will immediately accelerate sequence analysis studies on large read datasets. 
+As an example, the ICGC-TCGA Pan Cancer Analysis of Whole Genomes 
+(PCAWG)~\cite{weinstein2013cancer} brings together more than 500 top cancer researchers from about 80 institutions in a coordinated manner with the goal of mapping the entire mutational landscape of 37 common cancer types. 
+Currently each sample requires seven hours to download. 
+Importantly, researchers do not trust the provided mapping, and thus they redo mappings. 
+The time spent on mapping is about 50\% of the overall time spent on the sequence analysis pipeline. 
+As read mapping is typically the most costly step in NGS analysis pipelines (e.g., GATK), any improvement to existing mappers will immediately accelerate sequence analysis studies on large read datasets.
+
 
 
 \begin{figure}[htb!]
 \centering
-\subfloat[``Shotgun'' sequencing breaks DNA molecules into many short fragments, or reads, and relies on high coverage to produce a statistically likely representation of a whole genome]{
-\includegraphics[width=3.0in]{assets/shotgun.png}
+\subfloat[``Shotgun'' sequencing breaks DNA molecules into many short fragments, which are read from one or both ends in the form of {\em reads,\/} and relies on high coverage to produce a statistically likely representation of a whole genome]{
+\includegraphics[width=2.6in]{assets/shotgun.png}
 \label{fig:shotgun}
 }
 \subfloat[Single-nucleotide polymorphisms, or SNPs, are the simplest type of genomic variant, and form the bulk of ``variant-calling'' analysis]{
-\includegraphics[width=3.0in]{assets/snps.png}
+\includegraphics[width=2.6in]{assets/snps.png}
 \label{fig:snps}
 }\\
 \subfloat[The NGS downstream analysis pipeline. Shotgun reads are mapped to a reference genome with tools such as BWA or Bowtie. The resulting genomic sequence is analyzed for variants with tools such as GATK or Samtools. This allows relationships between genes and diseases to be uncovered.]{
-\includegraphics[width=3.0in]{assets/ngs-pipeline.png}
+\includegraphics[width=4.0in]{assets/ngs-pipeline.png}
 \label{fig:ngs-pipeline}
 }
 \caption[The NGS Pipeline]{The next-generation sequencing (NGS) pipeline.}
@@ -422,7 +445,7 @@ BLAST takes a ``seed-and-extend'' approach; it looks for small, $k$-mer matches
 that might lead to longer matches, and greedily extends them, ultimately 
 producing a \emph{sequence alignment} between a query and each potential 
 database hit.
-However, BLAST's running time scales linearly with the size of the database being
+However, BLAST's running-time scales linearly with the size of the database being
 searched, which is problematic as sequence databases continue to grow at a
 faster rate than Moore's law.
 
@@ -456,19 +479,21 @@ approximating structural alignments
 by instead comparing the ``bag-of-words'' from each structure.
 Analogous to a term-frequency vector in information retrieval, this bag-of-words
 indicates the abundance of particular, short structural motifs within a protein.
-%Does Fragbag have challenges we should mention?
-% NMD: not really. That we speed it up is evidence of the orthogonality of
-% our approach
 
-The study of drugs and their targets based on chemical structure and function
+The computational study of drugs and their targets based on chemical structure and function
 is known as chemogenomics~\cite{bredel2004chemogenomics}.
 In the fields of drug discovery and drug repurposing, the prediction 
 of biologically active compounds is an important task. 
 Computational high-throughput screening eliminates many compounds from 
 laborious wet-lab consideration, but even computational screening can be 
 time-consuming.
-Notably, large chemical compound databases, such as PubCHEM,
-cannnot be searched on a laptop computer with standard tools (e.g., SMSD).
+Chemogenomics typically relies on comparing chemical graph structures to identify
+similar molecules and binding sites.
+Furthermore, comparing chemical graph structures typically involves computing
+the maximal common subgraph (MCS), an NP-hard problem.
+However, there are once again an increasing number of such chemical compounds
+to search; the NCBI's PubChem database has grown from 31 million compounds in
+January 2011 to 68 million in July, 2015.
 
 With biological networks, challenges lie in integrating such data in order to 
 deduce gene function, as well as uncover disease and metabolic pathways.
@@ -505,13 +530,15 @@ The Genome Multitool (GEM) mapper~\cite{marco2012gem} also uses an FM-index
 coupled with dynamic programming in a compressed representation of the 
 reference genome, in order to prune the search space 
 when mapping reads to a reference genome.
-Masai~\cite{siragusa2013fast} uses an ``approximate seed'' approach to indexing
+Masai~\cite{siragusa2013fast} and mrsFAST \cite{hach2014mrsfast} use an ``approximate seed'' approach to indexing
 the space of possible matches, likewise pruning the search space; however, the
 bulk of its runtime is spent on the extend phase.
+State-of-the-art mapper mrsFAST-Ultra achieves improvements in efficiency based on machine architecture rather than leveraging redundancy in the data itself with near-perfect sensitivity, but
+only for the case where there are no insertions and deletions (indels) \cite{hach2014mrsfast}.
 Even with these approaches, read mapping remains a significant bottleneck in
 genomic research~\cite{hach2010mrsfast}.
 
-Recent advances in metagenomic search tools have relied on two advances over
+Recent advances in metagenomic search tools have relied on two improvements over
 BLASTX: indexing and alphabet reduction.
 RapSearch2~\cite{zhao2012rapsearch2} relies on alphabet reduction and a 
 collision-free hash table.
@@ -544,7 +571,13 @@ well-described by tetrahedra whose vertices were enriched for different tumor
 types and biological functions, from which four distinct tasks are 
 inferred~\cite{hart2015inferring}.
 
-An area of great interest in integrating network data is in global multiple network 
+The most widely-used chemogenomics search is the Small Molecule Subgraph Detector 
+(SMSD)~\cite{rahman2009small}, which applies one of several MCS algorithms based
+on the size and complexity of the graphs in question.
+Notably, large chemical compound databases, such as PubCHEM,
+cannnot be searched on a laptop computer with current tools such as SMSD.
+
+An area of great interest in integrating biological network data is in global multiple network 
 alignment, which is based on network topology and conserved biological function (IsoRank~\cite{singh2008global} and IsoRankN~\cite{liao2009isorankn}).
 IsoRank's approach is similar to the PageRank algorithm~\cite{page1999pagerank} 
 but performs a random walk on the product graph of two networks;
@@ -565,93 +598,18 @@ identify and unblock many blocked reactions in current models without loss of
 accuracy.
 
 
-\section{Compressive omics}
+\section{Structure of biological data}\label{structure}
 
-Another approach is to make use of a completely different paradigm for the 
-structure of biological data.
-Much biological data is highly redundant; if a computation is performed on one
+Fortunately, biological data has unique structure \cite{yu2015entropy}, which we 
+will take advantage of to perform search that scales sublinearly in the size of the database~(Section~\ref{omics}).
+The first critical observation is that
+much biological data is highly redundant; if a computation is performed on one
 human genome, and a researcher wishes to perform the same computation on another
-human genome, most of the work has already been done.
-
-Seeking to take advantage of the redundancy inherent in genomic sequence data, 
-Loh, Baym and Berger \cite{loh2012compressive}
-introduced \emph{compressive genomics}, an approach that relies on compressing
-data in such a way that the desired computation (such as BLAST search) can be
-performed in the compressed representation.
-This approach relies on a two-stage search, referred to as \emph{coarse} and \emph{fine} search.
-Coarse search is performed only on the coarse, or representative, subsequences
-that represent unique data.
-Any representative sequence that is within some threshold of the query is then expanded 
-into all the similar sequences it represents; the fine search is then over this
-(typically small) subset of the original database.
-This approach provides run-time improvements to BLAST search on 
-nucleotide~\cite{loh2012compressive} and protein~\cite{daniels2013compressive}
-data; moreover, these run-time improvements increase as databases grow.
-
-
-The CORA read mapper~\cite{yorukoglu2015compressive} applies an $l$-mer based 
-read-compression approach with a compressive indexing of the reference genome
-(referred to as a homology table).
-CORA, like caBLAST and caBLASTP, accelerates existing tools (in this case, read
-mappers including BWA, and Bowtie2) by allowing them to operate in a compressed
-space, and relying on a coarse and a fine phase.
-Short seed-clustering schemes, such as those used in Masai~\cite{siragusa2013fast} and 
-MrsFAST~\cite{hach2010mrsfast} conceptually differ from CORA in that those 
-schemes aim to accelerate only the seed-to-reference matching step.
-Thus, there is a subsequent seed-extension step, which is substantially more 
-costly and still needs to be performed for each read and mapping individually, 
-even when seeds are clustered. 
-Through its $l$-mer based read compression model, CORA is able to accelerate 
-and 
-achieve asymptotically sublinear scaling for both the seed-matching and 
-seed-extension steps within coarse-mapping, which comprises the major bulk of 
-the read-mapping computation.
-Traditionally, $k$-mers refer to short substrings of fixed length (often, but 
-not necessarily, a power of two) used as ``seeds'' for longer sequence matches.
-CORA uses much longer $k$-mers, and links each one to its neighbors within
-a small Hamming or Levenshtein distance.
-The term $l$-mer distinguishes these substrings from typically-short $k$-mers.
-
-In the area of metagenomic search,
-the recently-released MICA~\cite{yu2015entropy} demonstrates that the 
-compressive-acceleration approach of 
-caBLAST~\cite{loh2012compressive} and caBLASTP~\cite{daniels2013compressive} is 
-largely orthogonal to alphabet-reduction and indexing approaches.
-MICA applies the compressive-acceleration framework to 
-DIAMOND~\cite{buchfink2014fast}, using DIAMOND
-for its ``coarse search'' phase and a user's choice of DIAMOND or BLASTX for its
-``fine search'' phase; it demonstrates comparable run-time gains over DIAMOND as
-caBLASTP does over BLASTP.
-
-The compressive acceleration approach of \cite{loh2012compressive} has been
-generalized and adapted to non-sequence spaces as well.
-Chemogenomics, the computational study of small-molecule compounds and their
-affect on phenotype, relies on comparing chemical graph structures to identify
-similar molecules and binding sites.
-However, there are once again an increasing number of such chemical compounds
-to search; the NCBI's PubChem database has grown from 31 million compounds in
-January 2011 to 68 million in July, 2015.
-Furthermore, comparing chemical graph structures typically involves computing
-the maximal common subgraph (MCS), an NP-hard problem.
-One approach to this type of search is the Small Molecule Subgraph Detector 
-(SMSD)~\cite{rahman2009small}, which applies one of several MCS algorithms based
-on the size and complexity of the graphs in question.
-Applying a compressive acceleration approach, Ammolite~\cite{yu2015entropy}
-accelerates SMSD search by an average of 150x on the PubChem database.
-
-Again applying a compressive acceleration approach, 
-esFragBag~\cite{yu2015entropy} clusters proteins based on the cosine distance or
-Euclidean distance of their bag-of-words vectors, further accelerating FragBag's
-running time by an average of 10x.
-
-\section{Structure of biological data}
-
-Cluster-based search is well-studied~\cite{jardine1971use}, but conventional
+human genome, most of the work has already been done \cite{loh2012compressive}.
+When dealing with redundant data, clustering comes to mind.
+While cluster-based search is well-studied~\cite{jardine1971use}, conventional
 wisdom holds that it provides a constant factor speed-up over exhaustive search.
-However, \cite{daniels2013compressive} observed that caBLASTP demonstrated
-increased gains over BLASTP on newer, larger protein databases, suggesting that
-compressive acceleration takes advantage of ever-increasing redundancy in the
-data.
+
 Beyond redundancy, however, another attribute of large biological data sets
 stands out.
 Any high-dimensional data set, such as amino acid sequences of a bounded 
@@ -664,30 +622,54 @@ could
 enumerate $20^{500} \approx 3 \times 10^{650}$ distinct protein sequences, as 
 of July 
 2015, the NCBI's exhaustive ``NR'' database lists $6.9 \times 10^{7}$ sequences.
-This is not simply due to undersampling; thanks to evolution, only those protein
+This surprisingly lower number is not simply due to undersampling; thanks to 
+evolution, only those protein
 sequences which exhibit useful biological function should survive, and most
 random sequences of amino acids would not be expected to form stable structures.
 Thus, not only do biological data exhibit redundancy, they also tend not to 
-inhabit the entire feasible space.
+inhabit anywhere near the entire feasible space (Figure~\ref{fig:clusters}).
 It seems that physical laws have constrained the data to a particular subspace
 of the enumerable Cartesian space.
 
-One key insight as to why the ``compressive omics'' approach allows computation
-that scales sublinearly in the size of the data is that such data sets exhibit
+\begin{figure}[htb!]
+\centering
+\subfloat[Cartoon depiction of points in an arbitrary high-dimensional space, 
+as might arise from genomes generated by mutation and selection during the 
+course of evolution. 
+Although high-dimensional locally, at the global scale of covering spheres, the 
+data cloud looks nearly 1-dimensional, which enables entropy-scaling of 
+similarity search. Clusters cover the data points but do not cover unoccupied 
+regions of space.]{
+\includegraphics[width=2.8in]{assets/treepoints.pdf}
+\label{fig:clusters}
+}
+\subfloat[A query (green triangle) and two concentric search radii (red 
+circles) around it. Thanks to low fractal dimension, the large circle does
+not contain vastly more points than the small circle.]{
+\includegraphics[width=2.8in]{assets/treepoints-fractal.png}
+\label{fig:fractal}
+}
+\caption[Data spaces.]{A cartoon illustration of a biological data space.}
+\label{fig:dataspace}
+\end{figure}
+
+One key insight related to redundancy
+%as to why the compressive omics approach allows computation 
+%that scales sublinearly in the size of the data 
+is that such data sets exhibit
 low \emph{metric entropy}~\cite{yu2015entropy}.
 That is, for a given cluster radius $r_c$ and a database $D$, the number $k$ 
 of clusters needed to cover $D$ is bounded by $N_{r_c} (D)$, the metric 
 entropy, which is relatively small compared to
-$|D|$, the number of entries in the database.
+$|D|$, the number of entries in the database (Figure~\ref{fig:clusters}).
 In contrast, if the points were uniformly distributed about the Cartesian space,
 $N_{r_c} (D)$ would be larger.
 
-A second key insight is that the biological data sets considered 
-by~\cite{yu2015entropy} exhibit low \emph{fractal dimension}.
+A second key insight is that the biological data sets have low \emph{fractal dimension}~\cite{yu2015entropy}.
 That is, within some range of radii $r_1$ and $r_2$ about an arbitrary point
 in the database $D$, the fractal dimension $d$ is
 $d=\frac{\log (n_2 / n_1)}{ \log (r_2 / r_1)}$, where $n_1$ and $n_2$ are the
-number of points within $r_1$ and $r_2$ respectively.
+number of points within $r_1$ and $r_2$ respectively (Figure~\ref{fig:fractal}).
 
 Cluster-based search, as exemplified by ``compressive omics,'' can perform
 approximate search within a radius $r$ of a query $q$ on a database $D$ with 
@@ -715,7 +697,7 @@ Biological data sets exhibit redundancy, and are constrained to subspaces by
 physical laws.
 This combination results in low fractal dimension and low metric entropy 
 relative to the size of the data set, which suggests that ``compressive omics''
-will provide the ability for computation to scale with massively growing data.
+will provide the ability for computation to scale sublinearly with massively growing data.
 
 \begin{table}
 \label{fractal}
@@ -737,6 +719,74 @@ Chemical structure (PubChem) & 11:1 & 0.2\\
 \end{tabular}
 \end{table}
 
+\section{The age of compressive omics}\label{omics}
+
+We are entering the age of compressive omics, 
+which makes use of this completely different paradigm for the structure of biological data.
+Seeking to take advantage of the redundancy inherent in genomic sequence data, 
+Loh, Baym and Berger \cite{loh2012compressive}
+introduced \emph{compressive genomics}, an approach that relies on compressing
+data in such a way that the desired computation (such as BLAST search) can be
+performed in the compressed representation.
+Daniels et al. \cite{daniels2013compressive} further demonstrated that
+compressive acceleration takes advantage of increasing redundancy in the
+data over time.
+
+Compressive genomics is based on the concept of \emph{compressive acceleration},
+which relies on a two-stage search, referred to as \emph{coarse} and \emph{fine} search.
+Coarse search is performed only on the coarse, or representative, subsequences
+that represent unique data.
+Any representative sequence that is within some threshold of the query is then expanded 
+into all the similar sequences it represents; the fine search is then over this
+(typically small) subset of the original database.
+This approach provides orders-of-magnitude run-time improvements to BLAST search on 
+nucleotide~\cite{loh2012compressive} and protein~\cite{daniels2013compressive}
+data; moreover, these run-time improvements increase as databases grow.
+
+The CORA read mapper~\cite{yorukoglu2015compressive} applies a mid-size $l$-mer based 
+read-compression approach with a compressive indexing of the reference genome
+(referred to as a homology table).
+CORA, like caBLAST and caBLASTP, accelerates existing tools (in this case, read
+mappers including BWA or Bowtie2) by allowing them to operate in a compressed
+space, and relying on a coarse and a fine phase.
+In contrast, short seed-clustering schemes, such as those used in Masai~\cite{siragusa2013fast} and 
+MrsFAST~\cite{hach2010mrsfast}, conceptually differ from CORA in that those 
+schemes aim to accelerate only the seed-to-reference matching step.
+Thus, there is a subsequent seed-extension step, which is substantially more 
+costly and still needs to be performed for each read and mapping individually, 
+even when seeds are clustered. 
+Through its $l$-mer based read compression model, CORA is able to accelerate 
+and 
+achieve asymptotically sublinear scaling for both the seed-matching and 
+seed-extension steps within coarse-mapping, which comprises the major bulk of 
+the read-mapping computation.
+Traditionally, $k$-mers refer to short substrings of fixed length (often, but 
+not necessarily, a power of two) used as ``seeds'' for longer sequence matches.
+CORA uses much longer $k$-mers (e.g., 33-64 nucleotides long), and links each one to its neighbors within
+a small Hamming or Levenshtein distance.
+The term $l$-mer distinguishes these substrings from typically-short $k$-mers.
+
+In the area of metagenomic search,
+the recently-released MICA~\cite{yu2015entropy} demonstrates that the 
+compressive-acceleration approach of 
+caBLAST~\cite{loh2012compressive} and caBLASTP~\cite{daniels2013compressive} is 
+largely orthogonal to alphabet-reduction and indexing approaches.
+MICA applies the compressive-acceleration framework to the
+state-of-the-art DIAMOND~\cite{buchfink2014fast}, using it
+for its ``coarse search'' phase and a user's choice of DIAMOND or BLASTX for its
+``fine search'' phase; MICA demonstrates nearly order-of-magnitude run-time gains over the highly-optimized DIAMOND, comparable to that of caBLASTP over BLASTP.
+
+Compressive genomics \cite{loh2012compressive} has been
+generalized and adapted to non-sequence spaces as well, and coined
+``compressive omics''~\cite{yu2015entropy}.
+One such example is chemogenomics.
+Applying a compressive acceleration approach, Ammolite~\cite{yu2015entropy}
+accelerates SMSD search by an average of 150x on the PubChem database.
+Another example is 
+esFragBag~\cite{yu2015entropy}, which clusters proteins based on the cosine distance or
+Euclidean distance of their bag-of-words vectors, further accelerating FragBag's
+running time by an average of 10x.
+
 \section{Storage compression}
 
 Along with a genome sequence, modern sequencing systems provide a measure of
@@ -747,9 +797,11 @@ requiring six or seven bits per position.
 Thus, quality scores offer low-hanging fruit with respect to compression for 
 storage and transmission of sequence data.
 Several approaches to compressing quality scores have been 
-presented~\cite{janin2013adaptive,bonfield2013compression,ochoa2013qualcomp,yu2015quality}.
+presented~\cite{janin2013adaptive,bonfield2013compression,ochoa2013qualcomp,yu2015quality,yu2014traversing}.
 Quartz~\cite{yu2015quality} takes the unusual approach of applying lossy 
 compression, by bounding the likelihood that a quality score is informative.
+Importantly, Quartz modifies the FASTQ file of the reads and quality scores, and thus can be
+readily incorporated into existing sequence analysis pipelines.
 Surprisingly, Quartz not only demonstrates improved compression over competing
 approaches, but slightly improves the accuracy of downstream variant-calling.
 
@@ -758,7 +810,7 @@ similar reads (those that share a common
 substring) together into ``buckets'', allowing that common substring to now be 
 removed and treated as the bucket label, so that each read in the compressed 
 representation comprises only its unique differences from the bucket label.
-This allows a general-purpose compressor to achieve tight compression.
+This approach allows a general-purpose compressor to achieve tight compression.
 SCALCE~\cite{hach2012scalce} also relies on a ``boosting'' scheme, reordering
 reads in such a way that a general-purpose compressor achieves improved
 compression ratios.
@@ -804,18 +856,24 @@ The field of computational biology must continue to innovate, but also to
 incorporate the best ideas from other areas of computer science.
 For example, the compressive-acceleration approach bears similarity to a metric 
 ball tree, first described in the database community over twenty years 
-ago~\cite{uhlmann1991satisfying}.
-Other ideas from image processing, computational geometry, and other areas 
-outside of biology are likely to bear fruit.
-It is also likely that algorithmic ideas developed within computational biology
+ago~\cite{uhlmann1991satisfying};
+however, the latter does not allow one to analyze performance guarantees, 
+in terms of metric entropy and fractal dimension.
+Other ideas from image processing, computational geometry, sublinear-time algorithms~\cite{rubinfeld2011sublinear}, and other areas 
+outside of biology are likely to bear fruit~\cite{indyk1998approximate}. 
+In turn, it is also likely that algorithmic ideas developed within computational biology
 will become useful in other fields experiencing a data deluge, such as astronomy
 or social networks~\cite{stephens2015big}.
+
 
 While this Review has focused on the importance of algorithms that leverage the
 structure of data to cope with the increased throughput in computational 
 biology, it is also essential that techniques continue to make better 
 predictions and models that demonstrate improved fidelity to wet-lab 
 experiments.
+
+\section{Acknowledgments}
+
 
 
 
