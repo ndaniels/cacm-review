@@ -196,6 +196,7 @@ This growth in data poses significant challenges for
 researchers~\cite{marx2013biology}.
 Currently, many biological `omics' applications require us to store, access, 
 and analyze large libraries of data.
+% YWY: `omics' is the only single quote we use. Are we consistent?
 One approach to solving these challenges is to embrace cloud computing.
 Google, Inc. and the Broad Institute have collaborated to bring the GATK 
 (Genome 
@@ -362,10 +363,11 @@ known as \emph{variant calling}.
 While reference-based read mapping is a fundamentally simpler problem than
 \emph{de novo} assembly, it is still computationally complex, as gigabytes or
 terabytes of reads must each be mapped onto the reference genome, which can 
-range from millions (for bacteria) to billions (for mammals).
+range from millions (for bacteria) to billions (for mammals) of base pairs.
 As an example, the ICGC-TCGA Pan Cancer Analysis of Whole Genomes 
 (PCAWG)~\cite{weinstein2013cancer} brings together more than 500 top cancer researchers from about 80 institutions in a coordinated manner with the goal of mapping the entire mutational landscape of 37 common cancer types. 
 Currently each sample requires seven hours to download. 
+% YWY: 7 hours for whom? Perhaps "even on an institutional connection"?
 Importantly, researchers do not trust the provided mapping, and thus they redo mappings. 
 The time spent on mapping is about 50\% of the overall time spent on the sequence analysis pipeline. 
 As read mapping is typically the most costly step in NGS analysis pipelines (e.g., GATK), any improvement to existing mappers will immediately accelerate sequence analysis studies on large read datasets.
@@ -424,20 +426,21 @@ distant hits may still give clues to function.
 For this task, BLASTX~\cite{altschul1990basic} is commonly
 used to translate nucleotide reads into their possible protein sequences, and
 search for them in a protein database.
+% YWY: 16S isn't well introduced
 The difficulty is that the datasets required to shine any light on these 
 questions, namely from ``shotgun'' metagenomics, are gigantic and vastly more 
-complex than 16S metagenomic studies that merely classify the bacteria based on 
+complex than the 16S metagenomic studies that merely classify the bacteria based on 
 their divergence with respect to a specific gene.
 The massive data results in major identification 
 challenges for certain bacterial, as well as viral, species and 
 genera~\cite{janda200716s}. 
 
-Given a sequenced genome, the next natural questions are what genes (genomic
+Given a sequenced genome, the next natural questions ask what genes (genomic
 regions that code for proteins) are present, what structure each resulting
 protein takes, and what biological function it performs.
 Identifying likely genes is a well-studied problem~\cite{burge1998finding} 
 beyond the scope of this Review.
-However, determining evolutionary relationships, structure, and function are
+However, determining evolutionary relationships, structure, and function is
 at the heart of current research in computational biology.
 Since some organisms (known as \emph{model organisms}) are better studied than
 others, and evolution is known to conserve sequence, structure, and function,
@@ -881,7 +884,7 @@ predictions and models that demonstrate improved fidelity to wet-lab
 experiments.
 
 \section{Acknowledgments}
-
+Y.W.Y. is supported by a Hertz Foundation Fellowship.
 
 
 
