@@ -203,13 +203,12 @@ Analysis Toolkit) to the Google cloud (https://cloud.google.com/genomics/gatk).
 Amazon Web Services are also commonly used for computational biology 
 research and enterprise (e.g., DNANexus)~\cite{schatz2010cloud}.
 However, while cloud computing frees researchers from maintaining their own
-data centers, and provides cost-saving benefits when computing resources are
+data centers and provides cost-saving benefits when computing resources are
 not needed continuously, it is no panacea.
-First and foremost, cloud computing does not truly address the problem posed by
-a corpus of data that is growing faster than Moore's law, because the computer
-systems that make up those cloud datacenters are still themselves bound by
-improvements in semiconductor technology; they still follow the trajectory
-suggested by Moore's law.
+First and foremost, the computer systems that make up those cloud datacenters
+are themselves bound by improvements in semiconductor technology and Moore's
+law. Thus, cloud computing does not truly address the problem posed by the
+faster-than-Moore's law exponential growth in omics data.
 Moreover, in the face of disease outbreaks such as the 2014 Ebola virus epidemic 
 in West Africa, analysis resources are needed at often-remote field sites.
 While it is now possible to bring sequencing equipment and limited computing 
@@ -225,7 +224,7 @@ dimensionality of data in order to simplify analysis and uncover salient
 features~\cite{berger2013computational}.
 As another example, clever indexing techniques such as the Burroughs-Wheeler 
 Transform (BWT) take advantage of aspects of sequence 
-data~\cite{berger2013computational} to speed up computation and save storage.
+structure~\cite{berger2013computational} to speed up computation and save storage.
 This review focuses on cutting-edge algorithmic advances for dealing with the growth in 
 biological data by explicitly taking advantage of its unique structure; algorithms for gaining novel biological insights are not its 
 focus.
@@ -233,53 +232,55 @@ focus.
 \section{Types and sources of biological data}
 
 In the central dogma of molecular biology, DNA is transcribed into RNA, which
-is translated by the ribosome into a polypeptide chain, a sequence of amino 
-acids, known as a protein.
-This protein folds into a complex, low-energy structure, which functions as
-a cellular machine; the DNA sequence determines the amino acid sequence,
-which in turn determines the folded structure of the protein.
-This structure ultimately determines the protein's function within the cell.
+is translated by the ribosome into polypeptide chains, sequences of amino 
+acids which singly or in complexes are known as proteins.
+Proteins fold into complex, low-energy structures, which function as
+cellular machines; the DNA sequence determines the amino acid sequence,
+which in turn determines the folded structure of a protein.
+This structure ultimately determines a protein's function within the cell.
 Certain kinds of RNA also function, sometimes with proteins, as cellular 
 machines.
 Thus, researchers are interested in DNA, RNA, and protein sequences, as well
 as the structures that RNA and proteins form.
 Researchers also study the resulting functions of RNA and proteins, in what
 abundance they occur (gene expression), and how they interact
-with each other (interaction networks).
+with both each other (interaction networks) and small chemical compound agonists.
 
 Most but not all biological data take the form of \emph{sequence} data, either 
-nucleotide sequences (nominally a four-letter alphabet representing the four 
-DNA or RNA bases) or protein sequences (nominally a twenty-letter alphabet 
+nucleotide sequences (using a four-letter alphabet representing the four 
+DNA or RNA bases) or protein sequences (using a twenty-letter alphabet 
 representing the twenty standard amino acids).
 Sequence data are obtained in several ways, including mass spectrometry (which
-can determine protein sequence, as well as interactions) and RNA-seq (which can determine RNA sequence, 
-and by inference the expression of the gene to which it might translate).
-However, the greatest volume of sequence data derive from next-generation 
-sequencing (NGS) technologies, and comprise DNA sequences.
+can determine protein sequence, as well as interactions) and RNA-seq (which can determine RNA sequence and quantity, 
+allowing scientists to also infer the expression of the gene to which it might translate).
+However, the greatest volume of sequence data available are genomic in nature and 
+come from next-generation sequencing (NGS) technologies.
+
 At the dawn of the genomic era, Sanger sequencing was the most widely-used 
-method.
-Slow and labor intensive but well-tested, Sanger sequencing is still used to 
-validate NGS results.
-More recently, Sanger sequencing has largely been supplanted by NGS approaches,
+method for reading a genome.
+Though slow and labor intensive, Sanger sequencing has the advantage of being
+well-tested and is still used to validate NGS results.
+More recently, however, Sanger sequencing has largely been supplanted by NGS approaches,
 beginning with Illumina's ``sequencing by synthesis,'' which allows vastly 
 greater throughput due to massive parallelism, low cost, and simple sample
 preparation.
-Importantly to this Review, Illumina sequencing, as well as other approaches
-such as SOLiD, Ion Torrent, and 454 pyrosequencing, does not read a single DNA
-molecule end-to-end as one could a file from a hard drive.
+
+Importantly to this Review, Illumina sequencing and other NGS approaches
+such as SOLiD, Ion Torrent, and 454 pyrosequencing do not read a single DNA
+molecule end-to-end as one could read through a bound book.
 Instead, DNA molecules are chopped into many small fragments;
-from these we can measure 
+from these fragments we generate 
 \emph{reads} from one or both ends (Figure~\ref{fig:shotgun}).
 These reads are read concurrently and must be reassembled in the correct order 
-if an entire genome is to be read.
-Current reads most typically range from 50 to 200 bases long, though longer reads are
+to piece together an entire genome.
+Current reads typically range from 50 to 200 bases long, though longer reads are
 available with some technologies (e.g., PacBio).
 This so-called ``shotgun sequencing'' is analogous to the problem of 
-reconstructing a large file from small, 
-randomly-ordered reads, or a shredded paper document.
+reconstructing a book with all its pages torn out.
 However, these NGS reads overlap, and they are many in number, so 
 reconstructing an entire genome is feasible.
-No sequencing technology is completely infallible, so sequencing machines also
+
+Additionally, no sequencing technology is completely infallible, so sequencing machines also
 provide a \emph{quality score} (or measure of the confidence in the DNA base
 called) associated with each position.
 Thus, an NGS read is a string of DNA letters, coupled with a string of ASCII
@@ -287,10 +288,10 @@ characters that encode the quality of the base call.
 A sequencing run will produce many of these reads, typically stored in a FASTQ
 file.
 
-Another important type of biological data is gene expression, or the quantity of
-a particular gene product (usually a protein and more recently RNA) present in the cell.
+While sequence is important, scientists are also interested in measuring gene expression, or the quantity of
+a particular gene product (usually a protein or more recently RNA) present in the cell.
 Gene expression data is useful for relating genotype to phenotype, and is 
-important in studying diseases including cancer.
+important in studying many diseases.
 Usually obtained through microarrays or RNA-seq technologies, expression data is
 quantitative, as each gene from a sample is associated with a numeric expression
 level, and high-dimensional, as many thousands of genes may be analyzed at a
@@ -302,11 +303,13 @@ insights.
 More importantly, many of these biological insights can only be gleaned when 
 viewed in the context of hundreds or thousands of gene expression samples.
 
+As mentioned earlier, function follows form, so in addition to
+sequence and expression, structure plays an important role in biological data science.
 Protein structure data, primarily determined through X-ray crystallography or
 nuclear magnetic resonance (NMR) spectroscopy, describes the coordinates of 
 each atom, in Angstroms, of a protein in three-dimensional space.
 This information is important to understanding how a protein functions, because
-proteins interact physically with other molecules.
+proteins interact physically with other molecules and are geometrically constrained.
 Protein structure data are commonly stored in the Protein Data Bank (PDB); 
 each PDB entry has an associated resolution indicating the accuracy of the
 structural description.
@@ -314,20 +317,25 @@ Thus a PDB entry at its most basic level contains a list of atoms, along with
 which amino acid they belong to and their spatial coordinates as floating-point
 numbers.
 
-Chemical compounds represent another source of structural data, more general
-than proteins.
+Chemical compounds represent another source of structural data.
+Although generically much smaller than proteins, their structures are more general
+as they are not constrained in composition to amino acids.
 Determined by X-ray crystallography, NMR, electron microscopy and other 
-techniques, compounds---many of which are useful pharmaceuticals---can be
-represented as labeled graphs.
-In such a graph, the vertices are atoms (labeled with a chemical element) and
+techniques, chemical compounds---many of which are useful pharmaceuticals---can be
+represented as labeled graphs (or equivalently, adjacency matrices).
+In such graphs, the vertices are atoms (labeled with a chemical element) and
 the edges are bonds between atoms (labeled with a bond type, such as single or
 double).
-Chemical compounds are stored in databases such as PubChem, and can be described
-as adjacency matrices.
+Chemical compounds are stored in databases such as PubChem, and are often searched
+for by medicinal chemists as potential agonists for protein targets.
 
-Networks are frequently used to represent biological data, such as the genetic
+When examining more complex phenomena than single proteins or compounds, we
+often look to synthesize things together.
+To that end, we frequently use
+networks to represent biological data, such as the genetic
 and physical interactions among proteins, as well as those in metabolic 
 pathways~\cite{berger2013computational}.
+These relationships and interactions play crucial roles in a systems-level understanding of biology.
 
 \section{Challenges with biological data}
 
