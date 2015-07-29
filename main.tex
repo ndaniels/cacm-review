@@ -221,23 +221,7 @@ insights.
 More importantly, many of these biological insights can only be gleaned when 
 viewed in the context of hundreds or thousands of gene expression samples.
 
-As mentioned earlier, function follows form, so in addition to
-sequence and expression, structure plays an important role in biological data science.
-Protein structure data, primarily determined through X-ray crystallography or
-nuclear magnetic resonance (NMR) spectroscopy, describes the coordinates of 
-each atom, in Angstroms, of a protein in three-dimensional space.
-This information is important to understanding how a protein functions, because
-proteins interact physically with other molecules and are geometrically constrained.
-Protein structure data are commonly stored in the Protein Data Bank (PDB); 
-each PDB entry has an associated resolution indicating the accuracy of the
-structural description.
-Thus a PDB entry at its most basic level contains a list of atoms, along with
-which amino acid they belong to and their spatial coordinates as floating-point
-numbers.
-
-Chemical compounds represent another source of structural data.
-Although generically much smaller than proteins, their structures are more general
-as they are not constrained in composition to amino acids.
+Chemical compounds represent a source of structural data.
 Determined by X-ray crystallography, NMR, electron microscopy and other 
 techniques, chemical compounds---many of which are useful pharmaceuticals---can be
 represented as labeled graphs (or equivalently, adjacency matrices).
@@ -328,10 +312,10 @@ Metagenomics is the study of the many genomes (bacterial, fungal, and even
 viral) that make up a particular environment.
 Such an environment could be soil from a particular region (which can lead to 
 the discovery of new 
-antibiotics~\cite{gillespie2002isolation,forsberg2012shared}), or it could be 
+antibiotics~\cite{forsberg2012shared}), or it could be 
 the human gut, whose microbiome has been linked to human-health concerns 
 including Autism Spectrum Disorder~\cite{macfabe2012short}, 
-Crohn's Disease~\cite{gevers2014treatment,manichanh2006reduced}, and 
+Crohn's Disease~\cite{gevers2014treatment}, and 
 obesity~\cite{greenblum2012metagenomic}.
 Metagenomics fundamentally asks what organisms are present, and, in the case
 of a microbiome such as the gut, what metabolic functions it can accomplish as
@@ -386,7 +370,7 @@ approaches, the high dimensionality and noise in the data presents significant
 challenges~\cite{nguyen2002tumor}.
 Principal Component Analysis has shown promise in reducing the dimensionality
 of gene expression 
-data~\cite{raychaudhuri2000principal,alter2000singular,yeung2001principal,misra2002interactive}.
+data~\cite{raychaudhuri2000principal,alter2000singular}.
 Such data and its challenges have been the focus of other 
 articles~\cite{berger2013computational}, and thus will be only lightly touched 
 upon here.
@@ -441,7 +425,7 @@ The Genome Multitool (GEM) mapper~\cite{marco2012gem} also uses an FM-index
 coupled with dynamic programming in a compressed representation of the 
 reference genome, in order to prune the search space 
 when mapping reads to a reference genome.
-Masai~\cite{siragusa2013fast} and mrsFAST \cite{hach2014mrsfast} use an `approximate seed' approach to indexing
+Masai~\cite{siragusa2013fast} and mrsFAST \cite{hach2010mrsfast} use an `approximate seed' approach to indexing
 the space of possible matches, likewise pruning the search space; however, the
 bulk of its runtime is spent on the extend phase.
 State-of-the-art mapper mrsFAST-Ultra achieves improvements in efficiency based on machine architecture rather than leveraging redundancy in the data itself with near-perfect sensitivity, but
@@ -466,7 +450,7 @@ than BLASTX, but it is still linear in the size of the database being searched.
 Recent work on gene expession has explored additional ways to exploit the high-dimensional 
 structure of the data.
 SPARCLE (SPArse ReCovery of Linear combinations of Expression)~\cite{prat2011recovering}
-brings ideas from compressed sensing~\cite{candes2005decoding,candes2006stable,donoho2006compressed} 
+brings ideas from compressed sensing~\cite{candes2005decoding} 
 to gene expression analysis.
 Specifically, SPARCLE relies on the idea that a randomly-chosen set of points 
 are unlikely to be close in a lower-dimensional linear subspace.
@@ -532,7 +516,7 @@ evolve and fold independently; domains rarely exceed 500 amino acids.}, one
 could
 enumerate $20^{500} \approx 3 \times 10^{650}$ distinct protein sequences, as 
 of July 
-2015, the NCBI's exhaustive ``NR'' database lists $6.9 \times 10^{7}$ sequences.
+2015, the NCBI's exhaustive `NR' database lists $6.9 \times 10^{7}$ sequences.
 This surprisingly lower number is not simply due to undersampling; thanks to 
 evolution, only those protein
 sequences which exhibit useful biological function should survive, and most
@@ -559,8 +543,6 @@ not contain vastly more points than the small circle.}
 \end{figure}
 
 One key insight related to redundancy
-%as to why the compressive omics approach allows computation 
-%that scales sublinearly in the size of the data 
 is that such data sets exhibit
 low \emph{metric entropy}~\cite{yu2015entropy}.
 That is, for a given cluster radius $r_c$ and a database $D$, the number $k$ 
@@ -576,7 +558,7 @@ in the database $D$, the fractal dimension $d$ is
 $d=\frac{\log (n_2 / n_1)}{ \log (r_2 / r_1)}$, where $n_1$ and $n_2$ are the
 number of points within $r_1$ and $r_2$ respectively (Figure~\ref{fig:dataspace}).
 
-Cluster-based search, as exemplified by ``compressive omics,'' can perform
+Cluster-based search, as exemplified by `compressive omics,' can perform
 approximate search within a radius $r$ of a query $q$ on a database $D$ with 
 fractal dimension $d$ and metric entropy $k$ at the scale $r_c$ in time
 proportional to
@@ -672,8 +654,8 @@ seed-extension steps within coarse-mapping, which comprises the major bulk of
 the read-mapping computation.
 Traditionally, $k$-mers refer to short substrings of fixed length (often, but 
 not necessarily, a power of two) used as `seeds' for longer sequence matches.
-CORA uses much longer $k$-mers (e.g., 33-64 nucleotides long), and links each one to its neighbors within
-a small Hamming or Levenshtein distance.
+CORA uses much longer $k$-mers (e.g., 33-64 nucleotides long), and links each 
+one to its neighbors within a small Hamming or Levenshtein distance.
 The term $l$-mer distinguishes these substrings from typically-short $k$-mers.
 
 In the area of metagenomic search,
