@@ -282,9 +282,11 @@ While reference-based read mapping is a fundamentally simpler problem than
 terabytes of reads must each be mapped onto the reference genome, which can 
 range from millions (for bacteria) to billions (for mammals) of base pairs.
 As an example, the ICGC-TCGA Pan Cancer Analysis of Whole Genomes 
-(PCAWG)~\cite{weinstein2013cancer} brings together more than 500 top cancer researchers from about 80 institutions in a coordinated manner with the goal of mapping the entire mutational landscape of 37 common cancer types. 
-Currently each sample requires seven hours to download. 
-% YWY: 7 hours for whom? Perhaps "even on an institutional connection"?
+(PCAWG)~\cite{weinstein2013cancer} brings together more than 500 top cancer 
+researchers from about 80 institutions in a coordinated manner with the goal of 
+mapping the entire mutational landscape of 37 common cancer types. 
+Currently each sample requires seven hours to download even on an institutional 
+connection. 
 Importantly, researchers do not trust the provided mapping, and thus they redo mappings. 
 The time spent on mapping is about 50\% of the overall time spent on the sequence analysis pipeline. 
 As read mapping is typically the most costly step in NGS analysis pipelines (e.g., GATK), any improvement to existing mappers will immediately accelerate sequence analysis studies on large read datasets.
@@ -295,15 +297,15 @@ As read mapping is typically the most costly step in NGS analysis pipelines (e.g
 \begin{figure*}[htb!]
 \centering
 \subfloat[`Shotgun' sequencing breaks DNA molecules into many short fragments, which are read from one or both ends in the form of {\em reads,\/} and relies on high coverage to produce a statistically likely representation of a whole genome]{
-\includegraphics[height=2.6in]{assets/shotgun.png}
+\includegraphics[height=2.0in]{assets/shotgun.png}
 \label{fig:shotgun}
 }
 \subfloat[Single-nucleotide polymorphisms, or SNPs, are the simplest type of genomic variant, and form the bulk of `variant-calling' analysis]{
-\includegraphics[height=2.6in]{assets/snps.png}
+\includegraphics[height=2.0in]{assets/snps.png}
 \label{fig:snps}
 }\\
 \subfloat[The NGS downstream analysis pipeline. Shotgun reads are mapped to a reference genome with tools such as BWA or Bowtie. The resulting genomic sequence is analyzed for variants with tools such as GATK or Samtools. This allows relationships between genes and diseases to be uncovered.]{
-\includegraphics[width=4.0in]{assets/ngs-pipeline.png}
+\includegraphics[width=5.0in]{assets/ngs-pipeline.pdf}
 \label{fig:ngs-pipeline}
 }
 \caption[The NGS Pipeline]{The next-generation sequencing (NGS) pipeline.}
@@ -344,7 +346,6 @@ distant hits may still give clues to function.
 For this task, BLASTX~\cite{altschul1990basic} is commonly
 used to translate nucleotide reads into their possible protein sequences, and
 search for them in a protein database.
-% YWY: 16S isn't well introduced
 The difficulty is that the datasets required to shine any light on these 
 questions, namely from `shotgun' metagenomics, are gigantic and vastly more 
 complex than the 16S metagenomic studies that merely classify the bacteria 
@@ -389,27 +390,6 @@ data~\cite{raychaudhuri2000principal,alter2000singular,yeung2001principal,misra2
 Such data and its challenges have been the focus of other 
 articles~\cite{berger2013computational}, and thus will be only lightly touched 
 upon here.
-
-Over the course of evolutionary time, structure is known to be more highly 
-conserved than sequence~\cite{illergaard2009structure}, which is to say that it 
-does not change as rapidly.
-When the structure of a protein is known but its biological function or 
-evolutionary relationships are not, researchers may search for structurally
-similar proteins that are better studied~\cite{gibrat1996surprising}.
-Classical tools for this involve performing pairwise structural alignments to
-look for geometric similarity; DALI~\cite{holm1995dali} is still widely used,
-along with other aligners such as FATCAT~\cite{ye2004fatcat} and 
-Matt~\cite{menke2008matt}.
-Due to the complexity of protein structures, these programs generally take 
-significant amounts of time,
-especially to align multiple structures.
-For example, the DALI webserver can take as much as an hour to return results
-for a single query.
-FragBag~\cite{budowski2010fragbag} accelerates protein structure search by
-approximating structural alignments
-by instead comparing the `bag-of-words' from each structure.
-Analogous to a term-frequency vector in information retrieval, this bag-of-words
-indicates the abundance of particular, short structural motifs within a protein.
 
 The computational study of drugs and their targets based on chemical structure and function
 is known as chemogenomics~\cite{bredel2004chemogenomics}.
@@ -744,22 +724,6 @@ This approach allows a general-purpose compressor to achieve tight compression.
 SCALCE~\cite{hach2012scalce} also relies on a `boosting' scheme, reordering
 reads in such a way that a general-purpose compressor achieves improved
 compression ratios.
-
-
-
-% In the realm of protein structure prediction, it has been
-% observed~\cite{dunbrack2002rotamer} that rather than exploring the continuous
-% range of
-% possible dihedral angles, protein structures inhabit a smaller subspace, defined
-% by a narrower range of angles, referred to as
-% rotamers~\cite{dunbrack1993backbone}.
-% The TreePack algorithm~\cite{xu2006fast} takes advantage of this observation
-% for the
-% purpose of sidechain packing (finding the lowest-energy conformation for the
-% sidechain of each amino acid), using tree width to reduce the search space and
-% simplify dependencies.
-
-
 
 \section{Conclusions and future prospects}
 

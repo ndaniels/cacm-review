@@ -1,0 +1,32 @@
+\documentclass[article]
+
+\begin{document}
+        
+Over the course of evolutionary time, structure is known to be more highly 
+conserved than sequence~\cite{illergaard2009structure}, which is to say that it 
+does not change as rapidly.
+When the structure of a protein is known but its biological function or 
+evolutionary relationships are not, researchers may search for structurally
+similar proteins that are better studied~\cite{gibrat1996surprising}.
+Classical tools for this involve performing pairwise structural alignments to
+look for geometric similarity; DALI~\cite{holm1995dali} is still widely used,
+along with other aligners such as FATCAT~\cite{ye2004fatcat} and 
+Matt~\cite{menke2008matt}.
+Due to the complexity of protein structures, these programs generally take 
+significant amounts of time,
+especially to align multiple structures.
+For example, the DALI webserver can take as much as an hour to return results
+for a single query.
+FragBag~\cite{budowski2010fragbag} accelerates protein structure search by
+approximating structural alignments
+by instead comparing the `bag-of-words' from each structure.
+Analogous to a term-frequency vector in information retrieval, this bag-of-words
+indicates the abundance of particular, short structural motifs within a protein.
+
+
+
+        
+\bibliographystyle{abbrv}
+\bibliography{main}
+
+\end{document}
