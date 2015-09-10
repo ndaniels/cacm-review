@@ -9,7 +9,8 @@
 % Document starts
 \begin{document}
 
-\title{Computational biology in the 21st century:\\Algorithms that scale}
+\title{Computational biology in the 21st century:\\The growth of compressive 
+omics}
 \numberofauthors{3}
 
 \author{
@@ -93,7 +94,6 @@ one thousand U.S. Dollars.
 As a result, the amount of genomic data available to 
 researchers is increasing by a factor of ten every year.
 
-% YWY: Take spell-check lines out of figure axes labels! (TeraFLOPS, KiloBase)
 \begin{figure*}[htb!]
 \centering
 \subfloat[Growth of genomic sequence data (orange) as compared with the combined power of the top-500 supercomputer list (blue); y-axis is logarithmic]{
@@ -138,12 +138,40 @@ In computational biology, this approach has implicitly served researchers well.
 Now-classical approaches such as principal component analysis (PCA) reduce the 
 dimensionality of data in order to simplify analysis and uncover salient 
 features~\cite{berger2013computational}.
-As another example, clever indexing techniques such as the Burroughs-Wheeler 
+As another example, clever indexing techniques such as the Burrows-Wheeler 
 Transform (BWT) take advantage of aspects of sequence 
 structure~\cite{berger2013computational} to speed up computation and save storage.
 This Review focuses on cutting-edge algorithmic advances for dealing with the growth in 
 biological data by explicitly taking advantage of its unique structure; algorithms for gaining novel biological insights are not its 
 focus.
+
+\fbox{\parbox[t]{\linewidth}{
+
+(16S, shaped seeds, blocked
+reactions, chemogenomics, de Bruijn)
+\textbf{Definitions}
+
+\textbf{chemogenomics} This means this and that
+
+\textbf{metagenomics} This means another thing and so on and so forth blah blah blah blah blah.
+
+\textbf{metabolomics} And more.
+
+\textbf{shotgun sequencing} And more.
+
+\textbf{homology search} Determining the function, structure, or identity of a gene sequence by locating similar sequences within an annotated database.
+
+\textbf{transcriptome} And more.
+
+\textbf{FASTQ} A common plain-text format for biological sequence data.
+
+\textbf{BLAST} And more.
+
+\textbf{16S} 
+
+\textbf{de Bruijn graph}
+
+}}
 
 \section{Types and sources of biological data}
 
@@ -293,6 +321,31 @@ These genomes are enabling cross-species inference, for example about genes and 
 evolution~\cite{berger2013computational}.
 Again, the sheer enormity of sequencing data is problematic for storage, access and analysis.
 
+Given a sequenced genome, the next natural questions ask what genes (genomic
+regions that code for proteins) are present, what structure each resulting
+protein takes, and what biological function it performs.
+Identifying likely genes is a well-studied problem~\cite{berger2013computational} 
+beyond the scope of this Review.
+However, determining evolutionary relationships, structure, and function is
+at the heart of current research in computational biology.
+Since some organisms (known as \emph{model organisms}) are better studied than
+others, and evolution is known to conserve sequence, structure, and function,
+a powerful approach to determine these attributes is to search for similar
+sequences about which more is known. 
+This so-called \emph{homology search} entails searching for \emph{approximate}
+matches in databases of known gene or protein sequences.
+The homology search problem was previously believed to be solved;
+Basic Local Alignment Search Tool (BLAST)~\cite{berger2013computational} had been
+the standard tool for performing homology (similarity) search on databases of nucleotide and
+protein sequences.
+BLAST takes a `seed-and-extend' approach; it looks for small, $k$-mer matches
+that might lead to longer matches, and greedily extends them, ultimately 
+producing a \emph{sequence alignment} between a query and each potential 
+database hit.
+However, BLAST's running-time scales linearly with the size of the database being
+searched, which is problematic as sequence databases continue to grow at a
+faster rate than Moore's law.
+
 On a potentially even larger scale is the growth of metagenomic data.
 Metagenomics is the study of the many genomes (bacterial, fungal, and even 
 viral) that make up a particular environment.
@@ -326,30 +379,7 @@ The massive data results in major identification
 challenges for certain bacterial, as well as viral, species and 
 genera~\cite{janda200716s}. 
 
-Given a sequenced genome, the next natural questions ask what genes (genomic
-regions that code for proteins) are present, what structure each resulting
-protein takes, and what biological function it performs.
-Identifying likely genes is a well-studied problem~\cite{berger2013computational} 
-beyond the scope of this Review.
-However, determining evolutionary relationships, structure, and function is
-at the heart of current research in computational biology.
-Since some organisms (known as \emph{model organisms}) are better studied than
-others, and evolution is known to conserve sequence, structure, and function,
-a powerful approach to determine these attributes is to search for similar
-sequences about which more is known. 
-This so-called \emph{homology search} entails searching for \emph{approximate}
-matches in databases of known gene or protein sequences.
-The homology search problem was previously believed to be solved;
-Basic Local Alignment Search Tool (BLAST)~\cite{berger2013computational} had been
-the standard tool for performing homology (similarity) search on databases of nucleotide and
-protein sequences.
-BLAST takes a `seed-and-extend' approach; it looks for small, $k$-mer matches
-that might lead to longer matches, and greedily extends them, ultimately 
-producing a \emph{sequence alignment} between a query and each potential 
-database hit.
-However, BLAST's running-time scales linearly with the size of the database being
-searched, which is problematic as sequence databases continue to grow at a
-faster rate than Moore's law.
+
 
 While gene expression data (see Supplement) lends itself to cluster analysis 
 and probabilistic 
@@ -430,7 +460,7 @@ alphabet, with offsets stored to recover the original sequence in the full
 alphabet.
 The hash-table provides an efficient index of the database to be searched.
 DIAMOND~\cite{buchfink2014fast} also relies on alphabet reduction, but uses
-`shaped seeds' instead of simple $k$-mer seeds to index the database.
+`shaped seeds'---essentially, $k$-mers with wildcards at specific positions---instead of simple $k$-mer seeds to index the database.
 DIAMOND demonstrates search performance three to four orders of magnitude faster
 than BLASTX, but it is still linear in the size of the database being searched.
 
@@ -469,8 +499,8 @@ space, significantly decreasing running time while still providing competitive
 prediction accuracy.
 Using a compressed representation of metabolic networks, 
 Mongoose~\cite{chindelevitch2014exact} is able to 
-identify and unblock many blocked reactions in current models without loss of 
-accuracy.
+identify and unblock many blocked reactions--those whose metabolites are out of 
+balance---in current models without loss of accuracy.
 
 
 \section{Structure of biological data}\label{structure}
@@ -487,24 +517,15 @@ wisdom holds that it provides a constant factor speed-up over exhaustive search.
 
 Beyond redundancy, however, another attribute of large biological data sets
 stands out.
-Any high-dimensional data set, such as amino acid sequences of a bounded 
-length, can be described as inhabiting a vector space.
-For example, given an alphabet of 20 amino acids and a length bounded at 
-500\footnote{While the largest-known protein, titin, is over 33,000 amino acids 
-in length, proteins are typically described as comprising \emph{domains} that 
-evolve and fold independently; domains rarely exceed 500 amino acids.}, one 
-could
-enumerate $20^{500} \approx 3 \times 10^{650}$ distinct protein sequences, as 
-of July 
-2015, the NCBI's exhaustive `NR' database lists $6.9 \times 10^{7}$ sequences.
-This surprisingly lower number is not simply due to undersampling; thanks to 
-evolution, only those protein
-sequences which exhibit useful biological function should survive, and most
+Far fewer biological sequences exist than could be enumerated, but even more so, those that exist tend to be highly similar to many others.
+Thanks to 
+evolution, only those genes
+which exhibit useful biological function survive, and most
 random sequences of amino acids would not be expected to form stable structures.
+Since two human genomes differ on average by only 0.1\%, a collection of 1,000 human genomes contain less than twice the unique information of a single genome~\cite{loh2012compressive}.
 Thus, not only do biological data exhibit redundancy, they also tend not to 
 inhabit anywhere near the entire feasible space (Figure~\ref{fig:dataspace}).
-It seems that physical laws have constrained the data to a particular subspace
-of the enumerable Cartesian space.
+It seems that physical laws---in this case, evolution---have constrained the data to a particular subspace of the enumerable Cartesian space.
 
 \begin{figure}[htb!]
 \centering
@@ -538,7 +559,7 @@ in the database $D$, the fractal dimension $d$ is
 $d=\frac{\log (n_2 / n_1)}{ \log (r_2 / r_1)}$, where $n_1$ and $n_2$ are the
 number of points within $r_1$ and $r_2$ respectively (Figure~\ref{fig:dataspace}).
 
-Cluster-based search, as exemplified by `compressive omics,' can perform
+Cluster-based search, as exemplified by `compressive omics'---the use of compression to accelerate analysis---can perform
 approximate search within a radius $r$ of a query $q$ on a database $D$ with 
 fractal dimension $d$ and metric entropy $k$ at the scale $r_c$ in time
 proportional to
@@ -547,8 +568,10 @@ proportional to
     \underbrace{k}_{\textrm{metric entropy}} +
     \overbrace{\left|B_D(q,r)\right|}^{\textrm{output size}}
     \underbrace{\left(\frac{r+2r_c}{r}\right)^d}_{\textrm{scaling factor}}
-     \Bigg) .
+     \Bigg) ,
 \end{displaymath}
+where $B_D(q,r)$ refers to the set of points in $D$ contained within a ball of
+radius $r$ about a point $q$.
 
 Given this formalization, the ratio $\frac{|D|}{k}$ provides an estimate of the 
 speed-up factor for the coarse search component compared to a full linear 
@@ -561,7 +584,9 @@ radii, as well as the ratio $\frac{|D|}{k}$, for nucleotide sequence, protein
 sequence, protein structure, and chemical compound databases.
 
 Biological data sets exhibit redundancy, and are constrained to subspaces by
-physical laws.
+physical laws; that is, the vast majority of enumerable sequences and 
+structures do not exist because they are not advantageous (or at least, have 
+not been selected for by evolution).
 This combination results in low fractal dimension and low metric entropy 
 relative to the size of the data set, which suggests that `compressive omics'
 will provide the ability for computation to scale sublinearly with massively growing data.
@@ -573,7 +598,7 @@ p{#1}}
 \begin{table}
 \label{fractal}
 \caption{Metric entropy ratio (ratio of clusters to entries in database) and
-fractal dimension at typical search radii for four biological data sets.
+fractal dimension at typical search radii for four biological data sets. Metric entropy ratio gives an estimate of the acceleration of coarse search with respect to na\"ive search, and as long as fractal dimension is low, coarse search should dominate total search time.
 NCBI's `NR' non-redundant protein sequence and `NT' non-redundant nucleotide sequence databases are from June, 2015. Protein Databank (PDB) is from July, 2015. PubChem is from October, 2013.}
 \tabcolsep=0.11cm
 \begin{tabular}{H{3.0cm}p{2.2cm}p{1.8cm}}
@@ -618,7 +643,9 @@ data; moreover, these run-time improvements increase as databases grow.
 The CORA read mapper~\cite{yorukoglu2015compressive} applies a mid-size $l$-mer based 
 read-compression approach with a compressive indexing of the reference genome
 (referred to as a homology table).
-CORA, like caBLAST and caBLASTP, accelerates existing tools (in this case, read
+CORA, like caBLAST~\cite{loh2012compressive} and 
+caBLASTP~\cite{daniels2013comprssive}, accelerates existing tools (in this 
+case, read
 mappers including BWA or Bowtie2) by allowing them to operate in a compressed
 space, and relying on a coarse and a fine phase.
 In contrast, short seed-clustering schemes, such as those used in Masai~\cite{siragusa2013fast} and 
@@ -658,6 +685,19 @@ Another example is
 esFragBag~\cite{yu2015entropy}, which clusters proteins based on the cosine distance or
 Euclidean distance of their bag-of-words vectors, further accelerating FragBag's
 running time by an average of 10x.
+
+The compressive omics approach can, in some cases, come at the cost of accuracy.
+However, these cases are well-defined.
+Compressive omics never results in false positives (with respect to the na\"ive 
+search technique being accelerated), because the fine search phase applies the
+same comparison to the candidates as the na\"ive approach.
+Furthermore, when the distance function used for comparisons is a metric---more specifically, when it obeys the triangle inequality---false negatives will also
+never occur.
+However, in practice, non-metric distance functions are used, such as E-values
+in BLAST or cosine distance in esFragBag, and thus false negatives can occur.
+In practice, these error rates are low, and recall better than 90\% has been
+demonstrated~\cite{loh2012compressive,daniels2013compressive,yu2015entropy}
+
 
 \section{Storage compression}
 
@@ -722,7 +762,7 @@ In turn, it is also likely that algorithmic ideas developed within computational
 will become useful in other fields experiencing a data deluge, such as astronomy
 or social networks~\cite{stephens2015big}.
 
-
+\textbf{rewrite paragraph}
 While this Review has focused on the importance of algorithms that leverage the
 structure of data to cope with the increased throughput in computational 
 biology, it is also essential that techniques continue to make better 
