@@ -184,22 +184,20 @@ which in turn determines the folded structure of a protein.
 This structure ultimately determines a protein's function within the cell.
 Certain kinds of RNA also function, sometimes with proteins, as cellular 
 machines.
-Thus, researchers are interested in DNA, RNA, and protein sequences, as well
-as the structures that RNA and proteins form.
-Researchers also study the resulting functions of RNA and proteins, in what
-abundance they occur (gene expression), and how they interact
-with both each other (interaction networks) and small chemical compound 
-agonists.
+Methods have been developed to gather biological data from every level of this process,
+including sequence, abundance, structure, function, and interaction of DNA, RNA, and proteins.
+It is the success of these methods that has led to the massive influx of biological data we address today.
 
-Much but not all biological data take the form of \emph{sequence} data, either 
-nucleotide sequences (using a four-letter alphabet representing the four 
+\emph{Sequence} data, either 
+nucleotide sequences (using a four-letter alphabet representing the four
 DNA or RNA bases) or protein sequences (using a twenty-letter alphabet 
-representing the twenty standard amino acids).
-Sequence data are obtained in several ways, including mass spectrometry (which
-can determine protein sequence, as well as interactions) and RNA-seq (which can determine RNA sequence and quantity, 
-allowing scientists to also infer the expression of the gene to which it might translate).
-However, the greatest volume of sequence data available are genomic in nature and 
-come from next-generation sequencing (NGS) technologies.
+representing the twenty standard amino acids)
+are obtained in several ways.
+For protein and RNA sequence data, mass spectrometry---which
+can determine protein sequence, as well as interactions---and RNA-seq---which can determine RNA sequence and abundance, 
+allowing scientists to also infer the expression of the gene to which it might translate---play central roles.
+However, with the advent of next-generation sequencing (NGS) technologies, the greatest volume of sequence data available are that of DNA.
+For this Review, it is important to understand the structure of NGS sequence data, so we give a bit more description.
 
 At the dawn of the genomic era, Sanger sequencing was the most widely-used 
 method for reading a genome.
@@ -209,33 +207,29 @@ More recently, however, Sanger sequencing has largely been supplanted by NGS app
 beginning with Illumina's `sequencing by synthesis,' which allows vastly 
 greater throughput due to massive parallelism, low cost, and simple sample
 preparation.
-
-Importantly to this Review, Illumina sequencing and other NGS approaches
+Illumina sequencing and other NGS approaches
 such as SOLiD, Ion Torrent, and 454 pyrosequencing do not read a single DNA
 molecule end-to-end as one could read through a bound book.
 Instead, DNA molecules are chopped into many small fragments;
 from these fragments we generate 
 \emph{reads} from one or both ends (Figure~\ref{fig:shotgun}).
-These reads are read concurrently and must be reassembled in the correct order 
+These reads must be put together in the correct order 
 to piece together an entire genome.
 Current reads typically range from 50 to 200 bases long, though longer reads are
 available with some technologies (e.g., PacBio).
-This so-called `shotgun sequencing' is analogous to the problem of 
-reconstructing a book with all its pages torn out.
-However, these NGS reads overlap, and they are many in number, so 
-reconstructing an entire genome is feasible.
-
-Additionally, no sequencing technology is completely infallible, so sequencing machines also
+Because no sequencing technology is completely infallible, sequencing machines also
 provide a \emph{quality score} (or measure of the confidence in the DNA base
 called) associated with each position.
 Thus, an NGS read is a string of DNA letters, coupled with a string of ASCII
 characters that encode the quality of the base call.
-A sequencing run will produce many of these reads, typically stored in a FASTQ
+A sequencing run will produce many overlapping reads, typically stored in a FASTQ
 file.
 
 As mentioned earlier, function follows form, so in addition to
 sequence and expression, structure plays an important role in biological data science.
-Chemical compounds represent a source of structural data.
+However, we are not interested in only RNA and protein structures;
+small chemical compounds represent an additional source of relevant structural data,
+as they often interact with their larger RNA and protein brethren.
 Determined by X-ray crystallography, NMR, electron microscopy and other 
 techniques, chemical compounds---many of which are useful pharmaceuticals---can be
 represented as labeled graphs (or equivalently, adjacency matrices).
@@ -255,13 +249,16 @@ These relationships and interactions play crucial roles in a systems-level under
 
 \section{Challenges with biological data}
 
+%The assembly problem in so-called `shotgun sequencing' is analogous to the problem of 
+%reconstructing a book with all its pages torn out.
+%However, these NGS reads overlap, and they are many in number, so 
+%reconstructing an entire genome is feasible.
 Given DNA or RNA reads from NGS technologies, the first task is to 
-\emph{assemble} those fragments of sequence (which have associated quality 
-scores) into contiguous sequences.
-The task of \emph{de novo} assembly is beyond the scope of this Review, but is
-possible because reads overlap and because the sequence is covered by many such
-overlapping reads~\cite{berger2013computational}; the \emph{de Bruijn graph} is a 
-commonly-used data structure.
+\emph{assemble} those fragments of sequence into contiguous sequences.
+\emph{de novo} assembly is beyond the scope of this Review, but is
+possible because the sequence is covered by many
+overlapping reads~\cite{berger2013computational}; for this task, the \emph{de Bruijn graph}
+data structure is commonly used.
 Often, however, a \emph{reference genome} (or in the case of RNA, 
 \emph{transcriptome}) is available for the organism being sequenced; the
 establishment of a human reference genome was indeed the purpose of the Human
