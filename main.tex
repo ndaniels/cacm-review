@@ -185,8 +185,8 @@ This structure ultimately determines a protein's function within the cell.
 Certain kinds of RNA also function, sometimes with proteins, as cellular 
 machines.
 Methods have been developed to gather biological data from every level of this process,
-including sequence, abundance, structure, function, and interaction of DNA, RNA, and proteins.
-It is the success of these methods that has led to the massive influx of biological data we address today.
+resulting in a massive influx of data on sequence, abundance, structure, function, and interaction of DNA, RNA, and proteins,
+Much of these data are amenable to standard Big Data analysis methods; however, in this Review we focus on several examples of biological data which exhibit additional exploitable structure for creating scalable algorithms.
 
 \emph{Sequence} data, either 
 nucleotide sequences (using a four-letter alphabet representing the four
@@ -197,7 +197,7 @@ For protein and RNA sequence data, mass spectrometry---which
 can determine protein sequence, as well as interactions---and RNA-seq---which can determine RNA sequence and abundance, 
 allowing scientists to also infer the expression of the gene to which it might translate---play central roles.
 However, with the advent of next-generation sequencing (NGS) technologies, the greatest volume of sequence data available are that of DNA.
-For this Review, it is important to understand the structure of NGS sequence data, so we give a bit more description.
+To better understand the structure of NGS sequence data, we expand a little on NGS methodologies.
 
 At the dawn of the genomic era, Sanger sequencing was the most widely-used 
 method for reading a genome.
@@ -210,7 +210,7 @@ preparation.
 Illumina sequencing and other NGS approaches
 such as SOLiD, Ion Torrent, and 454 pyrosequencing do not read a single DNA
 molecule end-to-end as one could read through a bound book.
-Instead, DNA molecules are chopped into many small fragments;
+Instead, in so-called `shotgun sequencing' DNA molecules are chopped into many small fragments;
 from these fragments we generate 
 \emph{reads} from one or both ends (Figure~\ref{fig:shotgun}).
 These reads must be put together in the correct order 
@@ -230,14 +230,12 @@ sequence and expression, structure plays an important role in biological data sc
 However, we are not interested in only RNA and protein structures;
 small chemical compounds represent an additional source of relevant structural data,
 as they often interact with their larger RNA and protein brethren.
-Determined by X-ray crystallography, NMR, electron microscopy and other 
-techniques, chemical compounds---many of which are useful pharmaceuticals---can be
-represented as labeled graphs (or equivalently, adjacency matrices).
-In such graphs, the vertices are atoms (labeled with a chemical element) and
-the edges are bonds between atoms (labeled with a bond type, such as single or
-double).
-Chemical compounds are stored in databases such as PubChem, and are often searched
-for by medicinal chemists as potential agonists for protein targets.
+Physical structures of molecules can be determined by X-ray crystallography, NMR, electron microscopy and other 
+techniques.
+Once determined, there are a variety of ways of representing these structures, from labeled graphs of molecular bonds to summaries of protein domains.
+These representations can then be stored in databases such as PubChem or the Protein Data Bank,
+and are often searched through for, e.g. potential small molecule agonists for protein targets.
+Importantly, as we will expand upon later in this Review, interesting biomolecules tend to be sparse and non-randomly distributed in many representational spaces, which can be used for accelerating the aforementioned searches.
 
 When examining more complex phenomena than single proteins or compounds, we
 often look to synthesize things together.
@@ -246,6 +244,8 @@ networks to represent biological data, such as the genetic
 and physical interactions among proteins, as well as those in metabolic 
 pathways~\cite{berger2013computational}.
 These relationships and interactions play crucial roles in a systems-level understanding of biology.
+While standard network science tools have been employed in these analyses, metabolic pathways have additional flow constraints on their links;
+as with our other examples of interesting biological data types, these additional constraints on metabolic pathways allows for more targeted approaches to gain advantages over more general techniques.
 
 \section{Challenges with biological data}
 
