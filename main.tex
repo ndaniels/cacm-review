@@ -225,6 +225,17 @@ characters that encode the quality of the base call.
 A sequencing run will produce many overlapping reads, typically stored in a FASTQ
 file.
 
+While measuring abundance to generate gene expression data (see Supplement) lends itself to cluster analysis 
+and probabilistic 
+approaches, the high dimensionality and noise in the data presents significant 
+challenges~\cite{berger2013computational}.
+Principal Component Analysis has shown promise in reducing the dimensionality
+of gene expression 
+data~\cite{berger2013computational}.
+Such data and its challenges have been the focus of other 
+articles~\cite{berger2013computational}, and thus will be only lightly touched 
+upon here.
+
 As mentioned earlier, function follows form, so in addition to
 sequence and expression, structure plays an important role in biological data science.
 However, we are not interested in only RNA and protein structures;
@@ -249,12 +260,10 @@ as with our other examples of interesting biological data types, these additiona
 
 \section{Challenges with biological data}
 
-%The assembly problem in so-called `shotgun sequencing' is analogous to the problem of 
-%reconstructing a book with all its pages torn out.
-%However, these NGS reads overlap, and they are many in number, so 
-%reconstructing an entire genome is feasible.
 Given DNA or RNA reads from NGS technologies, the first task is to 
 \emph{assemble} those fragments of sequence into contiguous sequences.
+The assembly problem is analogous to the problem of 
+reconstructing a book with all its pages torn out.
 \emph{de novo} assembly is beyond the scope of this Review, but is
 possible because the sequence is covered by many
 overlapping reads~\cite{berger2013computational}; for this task, the \emph{de Bruijn graph}
@@ -266,6 +275,7 @@ Genome Project.
 
 When a reference sequence is available, NGS reads can be \emph{mapped} onto
 this reference (Figure~\ref{fig:ngs-pipeline}).
+Continuing the book analogy, it's much easier to reconstruct a book with all its pages torn out when one has another (perhaps imperfect) copy of that book to match pages to.
 Mapping allows the differences between the newly-sequenced genome and the 
 reference to be analyzed; these differences, or variants, may include single-nucleotide polymorphisms
 (SNPs, which are the genetic analogue to bit-flips) (Figure~\ref{fig:snps}), 
@@ -285,9 +295,6 @@ connection.
 Importantly, researchers do not trust the provided mapping, and thus they redo mappings. 
 The time spent on mapping is about 50\% of the overall time spent on the sequence analysis pipeline. 
 As read mapping is typically the most costly step in NGS analysis pipelines (e.g., GATK), any improvement to existing mappers will immediately accelerate sequence analysis studies on large read datasets.
-
-
-
 
 \begin{figure*}[htb!]
 \centering
@@ -375,19 +382,6 @@ subunit).
 The massive data results in major identification 
 challenges for certain bacterial, as well as viral, species and 
 genera~\cite{janda200716s}. 
-
-
-
-While gene expression data (see Supplement) lends itself to cluster analysis 
-and probabilistic 
-approaches, the high dimensionality and noise in the data presents significant 
-challenges~\cite{berger2013computational}.
-Principal Component Analysis has shown promise in reducing the dimensionality
-of gene expression 
-data~\cite{berger2013computational}.
-Such data and its challenges have been the focus of other 
-articles~\cite{berger2013computational}, and thus will be only lightly touched 
-upon here.
 
 The computational study of drugs and their targets based on chemical structure and function
 is known as chemogenomics~\cite{bredel2004chemogenomics}.
