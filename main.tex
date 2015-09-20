@@ -248,15 +248,32 @@ and are often searched through for, e.g. potential small molecule agonists for p
 Importantly, as we will expand upon later in this Review, interesting biomolecules tend to be sparse and non-randomly distributed in many representational spaces, which can be used for accelerating the aforementioned searches.
 
 When examining more complex phenomena than single proteins or compounds, we
-often look to synthesize things together.
+often look to synthesize things together into a systems-level understanding of biology.
 To that end, we frequently use
 networks to represent biological data, such as the genetic
 and physical interactions among proteins, as well as those in metabolic 
 pathways~\cite{berger2013computational}.
-These relationships and interactions play crucial roles in a systems-level understanding of biology.
-While standard network science tools have been employed in these analyses, metabolic pathways have additional flow constraints on their links;
-as with our other examples of interesting biological data types, these additional constraints on metabolic pathways allows for more targeted approaches to gain advantages over more general techniques.
+While standard network science tools have been employed in these analyses---
+e.g. several approaches make use of diffusion/random walks to explore the topology of networks \cite{cao2013going,cho2015diffusion}---
+they are often paired with more specific biological data,
+as seen in IsoRank~\cite{singh2008global} and IsoRankN's~\cite{liao2009isorankn} use of conserved biological function in addition to random walks for global multiple network alignment.
+Other tools solve more specifically biological problems, such as Mongoose~\cite{chindelevitch2014exact}, which 
+aims to identify and unblock metabolic networks.
+However, given its breadth, biological network science is beyond the scope of this Review, so we will not focus on that here.
 
+%NetworkBLAST~\cite{atias2012comparative} is another approach which searches for 
+%conserved paths and conserved interaction clusters.
+%IsoRankN produces a \emph{Personalized PageRank} alignment, similar to the
+%PageRank-Nibble algorithm~\cite{berger2013computational}.
+%Diffusion state distance (DSD)~\cite{cao2013going} is a diffusion-based approach
+%which defines a distance metric between two nodes based on random walks.
+%DSD penalizes high-degree nodes, and outperforms other graph-theoretic distance
+%functions when applied to standard approaches such as neighbor voting for function annotation.
+%Diffusion component analysis (DCA)~\cite{cho2015diffusion} amounts to a network-based 
+%analogue of principle component analysis; DCA reduces the dimensionality of a
+%network in such a way that function annotation can be performed in the reduced 
+%space, significantly decreasing running time while still providing competitive
+%prediction accuracy.
 \section{Challenges with biological data}
 
 Given DNA or RNA reads from NGS technologies, the first task is to 
@@ -397,20 +414,6 @@ However, there are once again an increasing number of such chemical compounds
 to search; the NCBI's PubChem database has grown from 31 million compounds in
 January 2011 to 68 million in July, 2015.
 
-With biological networks, challenges lie in integrating such data in order to 
-deduce gene function, as well as uncover disease and metabolic pathways.
-Several approaches have taken advantage of the particular topologies of 
-biological
-networks, such as diffusion-based approaches, which explore the topology of
-networks through random walks.
-In protein interaction networks, some nodes are high-degree \emph{hubs,} which 
-interact with
-many partners; these interactions do not imply shared function as strongly as
-non-hub interactions; such information needs to be teased apart.
-As new functional annotations and interactions are discovered,
-the number and size of these networks grows, making related problems more 
-intractable~\cite{berger2013computational}.
-
 The continued ability to store, search, and analyze these growing data sets hinges on
 clever algorithms that take advantage of the structure of, and redundancy 
 present in, the data.
@@ -469,28 +472,6 @@ The most widely-used chemogenomics search is the Small Molecule Subgraph Detecto
 on the size and complexity of the graphs in question.
 Notably, large chemical compound databases, such as PubCHEM,
 cannnot be searched on a laptop computer with current tools such as SMSD.
-
-An area of great interest in integrating biological network data is in global multiple network 
-alignment, which is based on network topology and conserved biological function (IsoRank~\cite{singh2008global} and IsoRankN~\cite{liao2009isorankn}).
-IsoRank's approach is similar to the PageRank algorithm~\cite{berger2013computational} 
-but performs a random walk on the product graph of two networks;
-IsoRankN produces a \emph{Personalized PageRank} alignment, similar to the
-PageRank-Nibble algorithm~\cite{berger2013computational}.
-NetworkBLAST~\cite{atias2012comparative} is another approach which searches for 
-conserved paths and conserved interaction clusters.
-Diffusion state distance (DSD)~\cite{cao2013going} is a diffusion-based approach
-which defines a distance metric between two nodes based on random walks.
-DSD penalizes high-degree nodes, and outperforms other graph-theoretic distance
-functions when applied to standard approaches such as neighbor voting for function annotation.
-Diffusion component analysis (DCA)~\cite{cho2015diffusion} amounts to a network-based 
-analogue of principle component analysis; DCA reduces the dimensionality of a
-network in such a way that function annotation can be performed in the reduced 
-space, significantly decreasing running time while still providing competitive
-prediction accuracy.
-Using a compressed representation of metabolic networks, 
-Mongoose~\cite{chindelevitch2014exact} is able to 
-identify and unblock many blocked reactions--those whose metabolites are out of 
-balance---in current models without loss of accuracy.
 
 
 \section{Structure of biological data}\label{structure}
