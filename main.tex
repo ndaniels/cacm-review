@@ -254,12 +254,12 @@ networks to represent biological data, such as the genetic
 and physical interactions among proteins, as well as those in metabolic 
 pathways~\cite{berger2013computational}.
 While standard network science tools have been employed in these analyses---
-e.g. several approaches make use of diffusion/random walks to explore the topology of networks \cite{cao2013going,cho2015diffusion}---
+e.g. several approaches make use of diffusion or random walks to explore the topology of networks \cite{cao2013going,cho2015diffusion}---
 they are often paired with more specific biological data,
 as seen in IsoRank~\cite{singh2008global} and IsoRankN's~\cite{liao2009isorankn} use of conserved biological function in addition to random walks for global multiple network alignment.
 Other tools solve more specifically biological problems, such as Mongoose~\cite{chindelevitch2014exact}, which 
 aims to identify and unblock metabolic networks.
-However, given its breadth, biological network science is beyond the scope of this Review, so we will not focus on that here.
+However, given its breadth, biological network science is beyond the scope of this Review, so we will not discuss it further.
 
 %NetworkBLAST~\cite{atias2012comparative} is another approach which searches for 
 %conserved paths and conserved interaction clusters.
@@ -440,8 +440,20 @@ the space of possible matches, likewise pruning the search space; however, the
 bulk of its runtime is spent on the extend phase.
 State-of-the-art mapper mrsFAST-Ultra achieves improvements in efficiency based on machine architecture rather than leveraging redundancy in the data itself with near-perfect sensitivity, but
 only for the case where there are no insertions and deletions (indels) \cite{hach2014mrsfast}.
-Even with these approaches, read mapping remains a significant bottleneck in
+Even with these approaches, read mapping remains a significant bottlenecks in
 genomic research~\cite{berger2013computational}.
+
+Compressing reads for storage is necessary should researchers wish to apply more advanced mapping tools or other analysis in the future.
+Taking advantage of sequence redundancy, Mince~\cite{patro2015data} groups 
+similar reads (those that share a common 
+substring) together into `buckets', allowing that common substring to now be 
+removed and treated as the bucket label, so that each read in the compressed 
+representation comprises only its unique differences from the bucket label.
+This approach allows a general-purpose compressor to achieve tight compression.
+SCALCE~\cite{berger2013computational} also relies on a `boosting' scheme, 
+reordering
+reads in such a way that a general-purpose compressor achieves improved
+compression ratios.
 
 Recent advances in metagenomic search tools have relied on two improvements over
 BLASTX: indexing and alphabet reduction.
@@ -587,9 +599,9 @@ Chemical~structure (PubChem) & 11:1 & 0.2\\
 \end{tabular}
 \end{table}
 
-\section{The age of compressive omics}\label{omics}
+\section{The age of compressive algorithms}\label{omics}
 
-We are entering the age of compressive omics, 
+We are entering the age of compressive algorithms, 
 which makes use of this completely different paradigm for the structure of biological data.
 Seeking to take advantage of the redundancy inherent in genomic sequence data, 
 Loh, Baym and Berger \cite{loh2012compressive}
@@ -615,7 +627,7 @@ The CORA read mapper~\cite{yorukoglu2015compressive} applies a mid-size $l$-mer 
 read-compression approach with a compressive indexing of the reference genome
 (referred to as a homology table).
 CORA, like caBLAST~\cite{loh2012compressive} and 
-caBLASTP~\cite{daniels2013comprssive}, accelerates existing tools (in this 
+caBLASTP~\cite{daniels2013compressive}, accelerates existing tools (in this 
 case, read
 mappers including BWA or Bowtie2) by allowing them to operate in a compressed
 space, and relying on a coarse and a fine phase.
@@ -676,21 +688,6 @@ However, in practice, non-metric distance functions are used, such as E-values
 in BLAST or cosine distance in esFragBag, and thus false negatives can occur.
 In practice, these error rates are low, and recall better than 90\% has been
 demonstrated~\cite{loh2012compressive,daniels2013compressive,yu2015entropy}
-
-
-\section{Storage compression}
-\textbf{TODO(NMD): remove/re-integrate section}.
-
-Also taking advantage of sequence redundancy, Mince~\cite{patro2015data} groups 
-similar reads (those that share a common 
-substring) together into `buckets', allowing that common substring to now be 
-removed and treated as the bucket label, so that each read in the compressed 
-representation comprises only its unique differences from the bucket label.
-This approach allows a general-purpose compressor to achieve tight compression.
-SCALCE~\cite{berger2013computational} also relies on a `boosting' scheme, 
-reordering
-reads in such a way that a general-purpose compressor achieves improved
-compression ratios.
 
 \section{Conclusions and future prospects}
 
