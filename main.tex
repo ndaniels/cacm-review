@@ -380,10 +380,7 @@ used to translate nucleotide reads into their possible protein sequences, and
 search for them in a protein database.
 The difficulty is that the datasets required to shine any light on these 
 questions, namely from `shotgun' metagenomics, are gigantic and vastly more 
-complex than the 16S metagenomic studies that merely classify the bacteria 
-based on 
-their divergence with respect to a specific gene (namely, the 16S ribosomal 
-subunit).
+complex than standard genomic datasets.
 The massive data results in major identification 
 challenges for certain bacterial, as well as viral, species and 
 genera~\cite{janda200716s}. 
@@ -434,7 +431,7 @@ genomic research~\cite{berger2013computational}.
 
 Compressing reads for storage is necessary should researchers wish to apply more advanced mapping tools or other analysis in the future.
 Taking advantage of sequence redundancy, Mince~\cite{patro2015data} groups 
-similar reads (those that share a common 
+similar reads (those that share a common short
 substring) together into `buckets', allowing that common substring to now be 
 removed and treated as the bucket label, so that each read in the compressed 
 representation comprises only its unique differences from the bucket label.
