@@ -148,21 +148,17 @@ focus.
 
 \textbf{Definitions}
 
-\textbf{chemogenomics} This means this and that
+\textbf{chemogenomics} Computational study of drugs and their targets based on chemical structure and function
 
-\textbf{metagenomics} This means another thing and so on and so forth blah blah blah blah blah.
+\textbf{metagenomics} Study of the many genomes that make up a particular environment
 
-\textbf{metabolomics} And more.
+\textbf{shotgun sequencing} Modern genomic sequencing, which chops DNA into many short pieces
 
-\textbf{shotgun sequencing} And more.
+\textbf{homology search} Determining the function, structure, or identity of a gene sequence by locating similar sequences within an annotated database
 
-\textbf{homology search} Determining the function, structure, or identity of a gene sequence by locating similar sequences within an annotated database.
+\textbf{transcriptome} Transcribed RNA from a genome, which results in protein production
 
-\textbf{transcriptome} And more.
-
-\textbf{FASTQ} A common plain-text format for biological sequence data.
-
-\textbf{BLAST} And more.
+\textbf{BLAST} Standard biological sequence similarity search tool
 
 }}
 
@@ -175,11 +171,11 @@ Proteins fold into complex, low-energy structures, which function as
 cellular machines; the DNA sequence determines the amino acid sequence,
 which in turn determines the folded structure of a protein.
 This structure ultimately determines a protein's function within the cell.
-Certain kinds of RNA also function, sometimes with proteins, as cellular 
+Certain kinds of RNA also function as cellular 
 machines.
 Methods have been developed to gather biological data from every level of this process,
-resulting in a massive influx of data on sequence, abundance, structure, function, and interaction of DNA, RNA, and proteins,
-Much of these data are amenable to standard Big Data analysis methods; however, in this Review we focus on several examples of biological data which exhibit additional exploitable structure for creating scalable algorithms.
+resulting in a massive influx of data on sequence, abundance, structure, function, and interaction of DNA, RNA, and proteins.
+Much of these data are amenable to standard Big Data analysis methods; however, in this Review we focus on examples of biological data which exhibit additional exploitable structure for creating scalable algorithms.
 
 Sequence data, either 
 nucleotide sequences (using a four-letter alphabet representing the four
@@ -187,10 +183,10 @@ DNA or RNA bases) or protein sequences (using a twenty-letter alphabet
 representing the twenty standard amino acids)
 are obtained in several ways.
 For protein and RNA sequence data, mass spectrometry---which
-can determine protein sequence, as well as interactions---and RNA-seq---which can determine RNA sequence and abundance, 
+can determine protein sequence and interactions---and RNA-seq---which can determine RNA sequence and abundance, 
 allowing scientists to also infer the expression of the gene to which it might translate---play central roles.
 However, with the advent of next-generation sequencing (NGS) technologies, the greatest volume of sequence data available are that of DNA.
-To better understand the structure of NGS sequence data, we expand a little on NGS methodologies.
+To better understand the structure of NGS sequence data, we will expand on NGS methodologies.
 
 At the dawn of the genomic era, Sanger sequencing was the most widely-used 
 method for reading a genome.
@@ -215,8 +211,7 @@ provide a \emph{quality score} (or measure of the confidence in the DNA base
 called) associated with each position.
 Thus, an NGS read is a string of DNA letters, coupled with a string of ASCII
 characters that encode the quality of the base call.
-A sequencing run will produce many overlapping reads, typically stored in a FASTQ
-file.
+A sequencing run will produce many overlapping reads.
 
 While measuring abundance to generate gene expression data (see Supplement) lends itself to cluster analysis 
 and probabilistic 
@@ -369,7 +364,7 @@ antibiotics~\cite{forsberg2012shared}), or it could be
 the human gut, whose microbiome has been linked to human-health concerns 
 including Autism Spectrum Disorder~\cite{macfabe2012short}, 
 Crohn's Disease, and 
-obesity~\cite{kostic2014microbiome}.
+obesity.
 Metagenomics fundamentally asks what organisms are present, and, in the case
 of a microbiome such as the gut, what metabolic functions it can accomplish as
 a whole.
@@ -404,7 +399,7 @@ Chemogenomics typically relies on comparing chemical graph structures to identif
 similar molecules and binding sites.
 Furthermore, comparing chemical graph structures typically involves computing
 the maximal common subgraph (MCS), an NP-hard problem.
-However, there are once again an increasing number of such chemical compounds
+However, there are an increasing number of such chemical compounds
 to search; the NCBI's PubChem database has grown from 31 million compounds in
 January 2011 to 68 million in July, 2015.
 
@@ -447,7 +442,7 @@ This approach allows a general-purpose compressor to achieve tight compression.
 SCALCE~\cite{berger2013computational} also relies on a `boosting' scheme, 
 reordering
 reads in such a way that a general-purpose compressor achieves improved
-compression ratios.
+compression.
 
 Recent advances in metagenomic search tools have relied on two improvements over
 BLASTX: indexing and alphabet reduction.
@@ -502,11 +497,11 @@ random sequences of amino acids would not be expected to form stable structures.
 Since two human genomes differ on average by only 0.1\%, a collection of 1,000 human genomes contain less than twice the unique information of a single genome~\cite{loh2012compressive}.
 Thus, not only do biological data exhibit redundancy, they also tend not to 
 inhabit anywhere near the entire feasible space (Figure~\ref{fig:dataspace}).
-It seems that physical laws---in this case, evolution---have constrained the data to a particular subspace of the enumerable Cartesian space.
+It seems that physical laws---in this case, evolution---constrain the data to a particular subspace of the Cartesian space.
 
 \begin{figure}[htb!]
 \centering
-\includegraphics[width=2.8in]{assets/treepoints-fractal.png}
+\includegraphics[width=2.5in]{assets/treepoints-fractal.png}
 \caption{Cartoon depiction of points in an arbitrary high-dimensional space, 
 as might arise from genomes generated by mutation and selection during the 
 course of evolution. 
@@ -575,8 +570,8 @@ p{#1}}
 \begin{table}
 \label{fractal}
 \caption{Metric entropy ratio (ratio of clusters to entries in database) and
-fractal dimension at typical search radii for four biological data sets. Metric entropy ratio gives an estimate of the acceleration of coarse search with respect to na\"ive search, and as long as fractal dimension is low, coarse search should dominate total search time.
-NCBI's `NR' non-redundant protein sequence and `NT' non-redundant nucleotide sequence databases are from June, 2015. Protein Databank (PDB) is from July, 2015. PubChem is from October, 2013.}
+fractal dimension at typical search radii for four data sets. Metric entropy ratio gives an estimate of the acceleration of coarse search with respect to na\"ive search, and as long as fractal dimension is low, coarse search should dominate total search time.
+NCBI's non-redundant `NR' protein and `NT' nucleotide sequence databases are from June, 2015. Protein Data Bank (PDB) is from July, 2015. PubChem is from October, 2013.}
 \tabcolsep=0.11cm
 \begin{tabular}{H{3.0cm}p{2.2cm}p{1.8cm}}
 \hline
@@ -593,7 +588,7 @@ Chemical~structure (PubChem) & 11:1 & 0.2\\
 \end{tabular}
 \end{table}
 
-\section{The age of compressive algorithms}\label{omics}
+\section{The age of compressive\\ algorithms}\label{omics}
 
 We are entering the age of compressive algorithms, 
 which makes use of this completely different paradigm for the structure of biological data.
@@ -610,12 +605,12 @@ Compressive genomics is based on the concept of \emph{compressive acceleration},
 which relies on a two-stage search, referred to as \emph{coarse} and \emph{fine} search.
 Coarse search is performed only on the coarse, or representative, subsequences
 that represent unique data.
-Any representative sequence that is within some threshold of the query is then expanded 
-into all the similar sequences it represents; the fine search is then over this
+Any representative sequence within some threshold of the query is then expanded 
+into all similar sequences it represents; the fine search is over this
 (typically small) subset of the original database.
-This approach provides orders-of-magnitude run-time improvements to BLAST search on 
+This approach provides orders-of-magnitude run-time improvements to BLAST 
 nucleotide~\cite{loh2012compressive} and protein~\cite{daniels2013compressive}
-data; moreover, these run-time improvements increase as databases grow.
+search; these run-time improvements increase as databases grow.
 
 The CORA read mapper~\cite{yorukoglu2015compressive} applies a mid-size $l$-mer based 
 read-compression approach with a compressive indexing of the reference genome
@@ -647,7 +642,7 @@ Unlike many other approaches to compressing quality scores in the literature
 ~\cite{bonfield2013compression,ochoa2013qualcomp},
 Quartz~\cite{yu2015quality} takes advantage of the fact that mid-size $l$-mers can in many cases almost uniquely identify locations in the genome,
 bounding the likelihood that a quality score is informative and allowing for lossy compression of uninformative scores.
-Because Quartz injects information from the distribution of $l$-mers in the target genome in this lossy compression, it demonstrates not only improved compression over competing
+Because Quartz's lossy compression injects information from the distribution of $l$-mers in the target genome, it demonstrates not only improved compression over competing
 approaches, but slightly improves the accuracy of downstream variant-calling.
 
 In the area of metagenomic search,
@@ -681,9 +676,9 @@ never occur.
 However, in practice, non-metric distance functions are used, such as E-values
 in BLAST or cosine distance in esFragBag, and thus false negatives can occur.
 In practice, these error rates are low, and recall better than 90\% has been
-demonstrated~\cite{loh2012compressive,daniels2013compressive,yu2015entropy}
+demonstrated~\cite{loh2012compressive,daniels2013compressive,yu2015entropy}.
 
-\section{Conclusions and future prospects}
+\section{Conclusions}
 
 The explosion of biological data, largely due to technological advances such as
 next-generation sequencing, presents us with challenges as well as 
@@ -713,7 +708,7 @@ however, the latter does not allow one to analyze performance guarantees,
 in terms of metric entropy and fractal dimension.
 Other ideas from image processing, computational geometry~\cite{indyk1998approximate}, sublinear-time algorithms~\cite{rubinfeld2011sublinear}, and other areas 
 outside of biology are likely to bear fruit. 
-In turn, it is also likely that algorithmic ideas developed within computational biology
+It is also likely that algorithmic ideas developed within computational biology
 will become useful in other fields experiencing a data deluge, such as astronomy
 or social networks~\cite{stephens2015big}.
 
