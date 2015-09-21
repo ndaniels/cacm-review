@@ -146,8 +146,6 @@ focus.
 
 \fbox{\parbox[t]{\linewidth}{
 
-(16S, shaped seeds, blocked
-reactions, chemogenomics, de Bruijn)
 \textbf{Definitions}
 
 \textbf{chemogenomics} This means this and that
@@ -165,10 +163,6 @@ reactions, chemogenomics, de Bruijn)
 \textbf{FASTQ} A common plain-text format for biological sequence data.
 
 \textbf{BLAST} And more.
-
-\textbf{16S} 
-
-\textbf{de Bruijn graph}
 
 }}
 
@@ -283,7 +277,7 @@ reconstructing a book with all its pages torn out.
 \emph{de novo} assembly is beyond the scope of this Review, but is
 possible because the sequence is covered by many
 overlapping reads~\cite{berger2013computational}; for this task, the \emph{de Bruijn graph}
-data structure is commonly used.
+data structure is commonly used~\cite{bruijn1946combinatorial}.
 Often, however, a \emph{reference genome} (or in the case of RNA, 
 \emph{transcriptome}) is available for the organism being sequenced; the
 establishment of a human reference genome was indeed the purpose of the Human
@@ -435,7 +429,7 @@ The Genome Multitool (GEM) mapper~\cite{marco2012gem} also uses an FM-index
 coupled with dynamic programming in a compressed representation of the 
 reference genome, in order to prune the search space 
 when mapping reads to a reference genome.
-Masai~\cite{siragusa2013fast} and mrsFAST \cite{berger2013computational} use an `approximate seed' approach to indexing
+Masai~\cite{siragusa2013fast} and mrsFAST \cite{hach2010mrsfast} use an `approximate seed' approach to indexing
 the space of possible matches, likewise pruning the search space; however, the
 bulk of its runtime is spent on the extend phase.
 State-of-the-art mapper mrsFAST-Ultra achieves improvements in efficiency based on machine architecture rather than leveraging redundancy in the data itself with near-perfect sensitivity, but
