@@ -221,10 +221,10 @@ file.
 While measuring abundance to generate gene expression data (see Supplement) lends itself to cluster analysis 
 and probabilistic 
 approaches, the high dimensionality and noise in the data presents significant 
-challenges~\cite{berger2013computational}.
+challenges.
 Principal Component Analysis has shown promise in reducing the dimensionality
 of gene expression 
-data~\cite{berger2013computational}.
+data.
 Such data and its challenges have been the focus of other 
 articles~\cite{berger2013computational}, and thus will be only lightly touched 
 upon here.
@@ -251,8 +251,8 @@ While standard network science tools have been employed in these analyses---
 e.g. several approaches make use of diffusion or random walks to explore the topology of networks \cite{cao2013going,cho2015diffusion}---
 they are often paired with more specific biological data,
 as seen in IsoRank~\cite{singh2008global} and IsoRankN's~\cite{liao2009isorankn} use of conserved biological function in addition to random walks for global multiple network alignment.
-Other tools solve more specifically biological problems, such as Mongoose~\cite{chindelevitch2014exact}, which 
-aims to identify and unblock metabolic networks.
+Other tools solve other biological problems, such as Mongoose~\cite{chindelevitch2014exact}, which 
+analyzes metabolic networks.
 However, given its breadth, biological network science is beyond the scope of this Review, so we will not discuss it further.
 
 %NetworkBLAST~\cite{atias2012comparative} is another approach which searches for 
@@ -417,14 +417,14 @@ computationally infeasible.''~\cite{berger2013computational}
 \section{State-of-the-art approaches to meet these challenges}
 
 Techniques for reference-based read mapping typically rely on algorithmic 
-approaches such as the Burrows-Wheeler transform (BWT)~\cite{berger2013computational}, 
+approaches such as the Burrows-Wheeler transform (BWT), 
 which provides efficient string 
 compression through a reversible transformation, while the FM-index data 
-structure~\cite{berger2013computational} is a compressed substring index, 
-based on the BWT, which provides efficient storage as well as fast search.
-BWA (Burrows-Wheeler Aligner)~\cite{berger2013computational} uses the BWT, while the 
-Bowtie2~\cite{berger2013computational} mapper further relies on the FM-index for 
-efficient mapping of NGS reads.
+structure is a compressed substring index, 
+based on the BWT, which provides efficient storage as well as fast search~\cite{berger2013computational}.
+BWA (Burrows-Wheeler Aligner)uses the BWT, while the 
+Bowtie2 mapper further relies on the FM-index for 
+efficient mapping of NGS reads~\cite{berger2013computational} .
 The Genome Multitool (GEM) mapper~\cite{marco2012gem} also uses an FM-index 
 coupled with dynamic programming in a compressed representation of the 
 reference genome, in order to prune the search space 
@@ -620,7 +620,7 @@ data; moreover, these run-time improvements increase as databases grow.
 The CORA read mapper~\cite{yorukoglu2015compressive} applies a mid-size $l$-mer based 
 read-compression approach with a compressive indexing of the reference genome
 (referred to as a homology table).
-CORA, like caBLAST~\cite{loh2012compressive} and 
+CORA, like caBLAST (compressively-accelerated BLAST)~\cite{loh2012compressive} and 
 caBLASTP~\cite{daniels2013compressive}, accelerates existing tools (in this 
 case, read
 mappers including BWA or Bowtie2) by allowing them to operate in a compressed
@@ -644,7 +644,7 @@ The term $l$-mer distinguishes these substrings from typically-short $k$-mers.
 As an aside, though not an example of accelerated similarity search, mid-size $l$-mers
 can also be used for storage compression of NGS quality scores associated with base calls.
 Unlike many other approaches to compressing quality scores in the literature
-~\cite{janin2013adaptive,bonfield2013compression,ochoa2013qualcomp},
+~\cite{bonfield2013compression,ochoa2013qualcomp},
 Quartz~\cite{yu2015quality} takes advantage of the fact that mid-size $l$-mers can in many cases almost uniquely identify locations in the genome,
 bounding the likelihood that a quality score is informative and allowing for lossy compression of uninformative scores.
 Because Quartz injects information from the distribution of $l$-mers in the target genome in this lossy compression, it demonstrates not only improved compression over competing
@@ -717,12 +717,13 @@ In turn, it is also likely that algorithmic ideas developed within computational
 will become useful in other fields experiencing a data deluge, such as astronomy
 or social networks~\cite{stephens2015big}.
 
-The massive influx of biological data offers up the possibility of better
-predictions and models that demonstrate improved fidelity to wet-lab 
-experiments.
-It is through the development of algorithms that leverage the
-structure of the data that we aim to cope with this increased throughput in computational 
-biology and realize that goal.
+Biological data science is unique for two primary reasons: biology itself---even molecular 
+biology---predates the information age, and 
+``nothing in biology makes sense except in light of evolution''~\cite{dobzhansky1973nothing}.
+Not only have biologists developed a diverse array of experimental techniques, but the data
+derive from astoundingly complex processes that themselves are driven by evolution.
+It is through the development of algorithms that leverage the structure of biological data that we can
+make sense of biology in light of evolution.
 
 \section{Acknowledgements}
 This work is supported by the National Institutes of Health, under
