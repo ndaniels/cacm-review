@@ -55,7 +55,7 @@ chemogenomics.
 % A category with the (minimum) three required fields
 \category{J.3}{Life and Medical Sciences}{Biology and genetics}
 
-\keywords{computational biology, database search, metagenomics, chemogenomics}
+\keywords{computational biology, database search, metagenomics, \\chemogenomics}
 
 
 
@@ -68,7 +68,7 @@ procedures, in hopes of obtaining more accurate answers at a greatly reduced
 cost.
 The past two decades have seen unprecedented technological progress with regard
 to generating biological data; next-generation sequencing, mass spectrometry,
-microarrays, nuclear magnetic resonance spectroscopy, and other high-throughput 
+microarrays, cryo-electron microscopy, and other high-throughput 
 approaches have led to an explosion of data.
 However, this explosion of data is a mixed blessing.
 On the one hand, the scale and scope of data should allow new insights into
@@ -84,9 +84,9 @@ every year or two; a similar claim can be made about storage capacity
 (Figure~\ref{fig:growth}).
 In 2002, when the first human genome was sequenced, the growth in computing 
 power was still matching the growth rate of genomic data.
-However, the sequencing technology used for the Human Genome Project--Sanger
-sequencing--was supplanted around 2004, with the advent of what is now known as 
-next-generation sequencing.
+However, the sequencing technology used for the Human Genome Project---Sanger
+sequencing---was supplanted around 2004, with the advent of what is now known 
+as next-generation sequencing.
 The material costs to sequence a genome have plummeted in the past
 decade, to the point where a whole human genome can be sequenced for less than
 one thousand U.S. Dollars.
@@ -127,8 +127,8 @@ faster-than-Moore's law exponential growth in omics data.
 Moreover, in the face of disease outbreaks such as the 2014 Ebola virus epidemic 
 in West Africa, analysis resources are needed at often-remote field sites.
 While it is now possible to bring sequencing equipment and limited computing 
-resources to remote sites, internet connectivity is still highly constrained.
-Thus, accessing cloud resources for analytics may not be possible.
+resources to remote sites, internet connectivity is still highly constrained;
+accessing cloud resources for analytics may not be possible.
 
 
 Computer scientists routinely exploit the structure of various data in
@@ -167,7 +167,7 @@ focus.
 In the central dogma of molecular biology, DNA is transcribed into RNA, which
 is translated by the ribosome into polypeptide chains, sequences of amino 
 acids which singly or in complexes are known as proteins.
-Proteins fold into complex, low-energy structures, which function as
+Proteins fold into sophisticated, low-energy structures, which function as
 cellular machines; the DNA sequence determines the amino acid sequence,
 which in turn determines the folded structure of a protein.
 This structure ultimately determines a protein's function within the cell.
@@ -182,7 +182,7 @@ nucleotide sequences (using a four-letter alphabet representing the four
 DNA or RNA bases) or protein sequences (using a twenty-letter alphabet 
 representing the twenty standard amino acids)
 are obtained in several ways.
-For protein and RNA sequence data, mass spectrometry---which
+For both protein and RNA sequence data, mass spectrometry---which
 can determine protein sequence and interactions---and RNA-seq---which can determine RNA sequence and abundance, 
 allowing scientists to also infer the expression of the gene to which it might translate---play central roles.
 However, with the advent of next-generation sequencing (NGS) technologies, the greatest volume of sequence data available are that of DNA.
@@ -190,10 +190,8 @@ To better understand the structure of NGS sequence data, we will expand on NGS m
 
 At the dawn of the genomic era, Sanger sequencing was the most widely-used 
 method for reading a genome.
-Though slow and labor intensive, Sanger sequencing has the advantage of being
-well-tested and is still used to validate NGS results.
-More recently, however, Sanger sequencing has largely been supplanted by NGS approaches,
-beginning with Illumina's `sequencing by synthesis,' which allows vastly 
+More recently, however, NGS approaches,
+beginning with Illumina's `sequencing by synthesis,' have enabled vastly 
 greater throughput due to massive parallelism, low cost, and simple sample
 preparation.
 Illumina sequencing and other NGS approaches
@@ -246,7 +244,7 @@ While standard network science tools have been employed in these analyses---
 e.g. several approaches make use of diffusion or random walks to explore the topology of networks \cite{cao2013going,cho2015diffusion}---
 they are often paired with more specific biological data,
 as seen in IsoRank~\cite{singh2008global} and IsoRankN's~\cite{liao2009isorankn} use of conserved biological function in addition to random walks for global multiple network alignment.
-Other tools solve other biological problems, such as Mongoose~\cite{chindelevitch2014exact}, which 
+Other tools solve other biological problems, such as MONGOOSE~\cite{chindelevitch2014exact}, which 
 analyzes metabolic networks.
 However, given its breadth, biological network science is beyond the scope of this Review, so we will not discuss it further.
 
@@ -269,7 +267,7 @@ Given DNA or RNA reads from NGS technologies, the first task is to
 \emph{assemble} those fragments of sequence into contiguous sequences.
 The assembly problem is analogous to the problem of 
 reconstructing a book with all its pages torn out.
-\emph{de novo} assembly is beyond the scope of this Review, but is
+\emph{De novo} assembly is beyond the scope of this Review, but is
 possible because the sequence is covered by many
 overlapping reads~\cite{berger2013computational}; for this task, the \emph{de Bruijn graph}
 data structure is commonly used~\cite{bruijn1946combinatorial}.
@@ -280,7 +278,7 @@ Genome Project.
 
 When a reference sequence is available, NGS reads can be \emph{mapped} onto
 this reference (Figure~\ref{fig:ngs-pipeline}).
-Continuing the book analogy, it's much easier to reconstruct a book with all its pages torn out when one has another (perhaps imperfect) copy of that book to match pages to.
+Continuing the book analogy, it is much easier to reconstruct a book with all its pages torn out when one has another (perhaps imperfect) copy of that book to match pages to.
 Mapping allows the differences between the newly-sequenced genome and the 
 reference to be analyzed; these differences, or variants, may include single-nucleotide polymorphisms
 (SNPs, which are the genetic analogue to bit-flips) (Figure~\ref{fig:snps}), 
@@ -344,7 +342,7 @@ sequences about which more is known.
 This so-called \emph{homology search} entails searching for \emph{approximate}
 matches in databases of known gene or protein sequences.
 The homology search problem was previously believed to be solved;
-Basic Local Alignment Search Tool (BLAST)~\cite{berger2013computational} had been
+Basic Local Alignment Search Tool (BLAST)~\cite{berger2013computational} has been
 the standard tool for performing homology (similarity) search on databases of nucleotide and
 protein sequences.
 BLAST takes a `seed-and-extend' approach; it looks for small, $k$-mer matches
@@ -414,28 +412,27 @@ which provides efficient string
 compression through a reversible transformation, while the FM-index data 
 structure is a compressed substring index, 
 based on the BWT, which provides efficient storage as well as fast search~\cite{berger2013computational}.
-BWA (Burrows-Wheeler Aligner)uses the BWT, while the 
+BWA (Burrows-Wheeler Aligner) uses the BWT, while the 
 Bowtie2 mapper further relies on the FM-index for 
 efficient mapping of NGS reads~\cite{berger2013computational} .
 The Genome Multitool (GEM) mapper~\cite{marco2012gem} also uses an FM-index 
 coupled with dynamic programming in a compressed representation of the 
 reference genome, in order to prune the search space 
 when mapping reads to a reference genome.
-Masai~\cite{siragusa2013fast} and mrsFAST \cite{hach2010mrsfast} use an `approximate seed' approach to indexing
+Masai~\cite{siragusa2013fast} and mrsFAST \cite{hach2010mrsfast} use an `approximate seed' approach to index
 the space of possible matches, likewise pruning the search space; however, the
 bulk of its runtime is spent on the extend phase.
 State-of-the-art mapper mrsFAST-Ultra achieves improvements in efficiency based on machine architecture rather than leveraging redundancy in the data itself with near-perfect sensitivity, but
 only for the case where there are no insertions and deletions (indels) \cite{hach2014mrsfast}.
-Even with these approaches, read mapping remains a significant bottlenecks in
+Even with these approaches, read mapping remains a significant bottleneck in
 genomic research~\cite{berger2013computational}.
 
 Compressing reads for storage is necessary should researchers wish to apply more advanced mapping tools or other analysis in the future.
 Taking advantage of sequence redundancy, Mince~\cite{patro2015data} groups 
-similar reads (those that share a common short
-substring) together into `buckets', allowing that common substring to now be 
+similar reads (those that share a common short---15bp---substring) together into `buckets', allowing that common substring to now be 
 removed and treated as the bucket label, so that each read in the compressed 
 representation comprises only its unique differences from the bucket label.
-This approach allows a general-purpose compressor to achieve tight compression.
+This approach allows a general-purpose compressor to achieve better compression.
 SCALCE~\cite{berger2013computational} also relies on a `boosting' scheme, 
 reordering
 reads in such a way that a general-purpose compressor achieves improved
@@ -451,9 +448,9 @@ alphabet, with offsets stored to recover the original sequence in the full
 alphabet.
 The hash-table provides an efficient index of the database to be searched.
 DIAMOND~\cite{buchfink2014fast} also relies on alphabet reduction, but uses
-`shaped seeds'---essentially, $k$-mers with wildcards at specific positions---instead of simple $k$-mer seeds to index the database.
+`shaped seeds'---essentially, $k$-mers of length 15--24 with wildcards at 9--12 specific positions---instead of simple $k$-mer seeds to index the database.
 DIAMOND demonstrates search performance three to four orders of magnitude faster
-than BLASTX, but it is still linear in the size of the database being searched.
+than BLASTX, but still linear in the size of the database being searched.
 
 Recent work on gene expression has explored additional ways to exploit the high-dimensional 
 structure of the data.
@@ -566,13 +563,13 @@ p{#1}}
 
 \begin{table}
 \label{fractal}
-\caption{Metric entropy ratio (ratio of clusters to entries in database) and
-fractal dimension at typical search radii for four data sets. Metric entropy ratio gives an estimate of the acceleration of coarse search with respect to na\"ive search, and as long as fractal dimension is low, coarse search should dominate total search time.
+\caption{Metric-entropy ratio (ratio of clusters to entries in database) and
+fractal dimension at typical search radii for four data sets. Metric-entropy ratio gives an estimate of the acceleration of coarse search with respect to na\"ive search, and as long as fractal dimension is low, coarse search should dominate total search time.
 NCBI's non-redundant `NR' protein and `NT' nucleotide sequence databases are from June, 2015. Protein Data Bank (PDB) is from July, 2015. PubChem is from October, 2013.}
 \tabcolsep=0.11cm
 \begin{tabular}{H{3.0cm}p{2.2cm}p{1.8cm}}
 \hline
-Data set & Metric entropy ratio & Fractal dimension \\        
+Data set & Metric-entropy ratio & Fractal dimension \\        
 \hline
 Nucleotide~sequences (NCBI NT) & 7:1 & 1.5\\
 \hline
@@ -588,16 +585,12 @@ Chemical~structure (PubChem) & 11:1 & 0.2\\
 \section{The age of compressive\\ algorithms}\label{omics}
 
 We are entering the age of compressive algorithms, 
-which makes use of this completely different paradigm for the structure of biological data.
+which make use of this completely different paradigm for the structure of biological data.
 Seeking to take advantage of the redundancy inherent in genomic sequence data, 
 Loh, Baym and Berger \cite{loh2012compressive}
 introduced \emph{compressive genomics}, an approach that relies on compressing
 data in such a way that the desired computation (such as BLAST search) can be
 performed in the compressed representation.
-Daniels et al. \cite{daniels2013compressive} further demonstrated that
-compressive acceleration takes advantage of increasing redundancy in the
-data over time.
-
 Compressive genomics is based on the concept of \emph{compressive acceleration},
 which relies on a two-stage search, referred to as \emph{coarse} and \emph{fine} search.
 Coarse search is performed only on the coarse, or representative, subsequences
@@ -616,7 +609,7 @@ CORA, like caBLAST (compressively-accelerated BLAST)~\cite{loh2012compressive} a
 caBLASTP~\cite{daniels2013compressive}, accelerates existing tools (in this 
 case, read
 mappers including BWA or Bowtie2) by allowing them to operate in a compressed
-space, and relying on a coarse and a fine phase.
+space, and relies on a coarse and a fine phase.
 In contrast, short seed-clustering schemes, such as those used in Masai~\cite{siragusa2013fast} and 
 MrsFAST~\cite{berger2013computational}, conceptually differ from CORA in that those 
 schemes aim to accelerate only the seed-to-reference matching step.
@@ -640,7 +633,8 @@ Unlike many other approaches to compressing quality scores in the literature
 Quartz~\cite{yu2015quality} takes advantage of the fact that mid-size $l$-mers can in many cases almost uniquely identify locations in the genome,
 bounding the likelihood that a quality score is informative and allowing for lossy compression of uninformative scores.
 Because Quartz's lossy compression injects information from the distribution of $l$-mers in the target genome, it demonstrates not only improved compression over competing
-approaches, but slightly improves the accuracy of downstream variant-calling.
+approaches, but slightly improves the accuracy of downstream 
+variant-calling~\cite{yu2015quality}.
 
 In the area of metagenomic search,
 the recently-released MICA~\cite{yu2015entropy} demonstrates that the 
@@ -670,9 +664,9 @@ search technique being accelerated), because the fine search phase applies the
 same comparison to the candidates as the na\"ive approach.
 Furthermore, when the distance function used for comparisons is a metric---more specifically, when it obeys the triangle inequality---false negatives will also
 never occur.
-However, in practice, non-metric distance functions are used, such as E-values
+Yet, in practice, non-metric distance functions are used, such as E-values
 in BLAST or cosine distance in esFragBag, and thus false negatives can occur.
-In practice, these error rates are low, and recall better than 90\% has been
+Fortunately, these error rates are low, and recall better than 90\% has been
 demonstrated~\cite{loh2012compressive,daniels2013compressive,yu2015entropy}.
 
 \section{Conclusions}
@@ -692,9 +686,11 @@ data~\cite{yu2015entropy}, while providing orthogonal benefits to many other
 useful indexing techniques, is an important tool for coping with the deluge of
 data.
 The extension of this compressive acceleration approach to 
-metagenomics~\cite{yu2015entropy}, NGS read 
-mapping and chemogenomics~\cite{yorukoglu2015compressive} suggests its 
+metagenomics, NGS read 
+mapping~\cite{yorukoglu2015compressive}, and chemogenomics suggests its 
 flexibility.
+Likewise, compressive storage for these applications can be shown to scale with 
+the information-theoretic entropy of the data set~\cite{yu2015entropy}.
 
 The field of computational biology must continue to innovate, but also to 
 incorporate the best ideas from other areas of computer science.
