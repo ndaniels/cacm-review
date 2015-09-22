@@ -427,8 +427,18 @@ only for the case where there are no insertions and deletions (indels) \cite{hac
 Even with these approaches, read mapping remains a significant bottleneck in
 genomic research~\cite{berger2013computational}.
 
-Compressing reads for storage is necessary should researchers wish to apply more advanced mapping tools or other analysis in the future.
-Taking advantage of sequence redundancy, Mince~\cite{patro2015data} groups 
+Compressing reads for storage is necessary should researchers wish to apply more advanced mapping tools or other analysis in the future \cite{bonfield2013compression}.
+As stated earlier, NGS reads consist of a sequence string and associated quality scores, the latter of which generally uses more space when compressed.
+By taking advantage of biological structure, both parts of NGS reads can be better compressed.
+Unlike some other approaches to compressing quality scores in the literature
+~\cite{bonfield2013compression,ochoa2013qualcomp},
+Quartz~\cite{yu2015quality} takes advantage of the fact that mid-size $l$-mers can in many cases almost uniquely identify locations in the genome,
+bounding the likelihood that a quality score is informative and allowing for lossy compression of uninformative scores.
+approaches, but slightly improves the accuracy of downstream 
+variant-calling~\cite{yu2015quality}.
+Because Quartz's lossy compression injects information from the distribution of $l$-mers in the target genome, it demonstrates not only improved compression over competing approaches, but slightly improves the accuracy of downstream variant-calling \cite{yu2015quality}.
+Similarly, for the sequence string,
+taking advantage of sequence redundancy, Mince~\cite{patro2015data} groups 
 similar reads (those that share a common short---15bp---substring) together into `buckets', allowing that common substring to now be 
 removed and treated as the bucket label, so that each read in the compressed 
 representation comprises only its unique differences from the bucket label.
@@ -626,15 +636,6 @@ not necessarily, a power of two) used as `seeds' for longer sequence matches.
 CORA uses much longer $k$-mers (e.g., 33-64 nucleotides long), and links each 
 one to its neighbors within a small Hamming or Levenshtein distance.
 The term $l$-mer distinguishes these substrings from typically-short $k$-mers.
-As an aside, though not an example of accelerated similarity search, mid-size $l$-mers
-can also be used for storage compression of NGS quality scores associated with base calls.
-Unlike many other approaches to compressing quality scores in the literature
-~\cite{bonfield2013compression,ochoa2013qualcomp},
-Quartz~\cite{yu2015quality} takes advantage of the fact that mid-size $l$-mers can in many cases almost uniquely identify locations in the genome,
-bounding the likelihood that a quality score is informative and allowing for lossy compression of uninformative scores.
-Because Quartz's lossy compression injects information from the distribution of $l$-mers in the target genome, it demonstrates not only improved compression over competing
-approaches, but slightly improves the accuracy of downstream 
-variant-calling~\cite{yu2015quality}.
 
 In the area of metagenomic search,
 the recently-released MICA~\cite{yu2015entropy} demonstrates that the 
