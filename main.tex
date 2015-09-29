@@ -197,7 +197,7 @@ preparation.
 Illumina sequencing and other NGS approaches
 such as SOLiD, Ion Torrent, and 454 pyrosequencing do not read a single DNA
 molecule end-to-end as one could read through a bound book.
-Instead, in so-called `shotgun sequencing' DNA molecules are chopped into many small fragments;
+Instead, in \emph{shotgun sequencing}, DNA molecules are chopped into many small fragments;
 from these fragments we generate 
 \emph{reads} from one or both ends (Figure~\ref{fig:shotgun}).
 These reads must be put together in the correct order 
@@ -339,21 +339,21 @@ Since some organisms (known as \emph{model organisms}) are better studied than
 others, and evolution is known to conserve sequence, structure, and function,
 a powerful approach to determine these attributes is to search for similar
 sequences about which more is known. 
-This so-called \emph{homology search} entails searching for \emph{approximate}
+This so-called \emph{homology search} entails searching for approximate
 matches in databases of known gene or protein sequences.
 The homology search problem was previously believed to be solved;
-Basic Local Alignment Search Tool (BLAST)~\cite{berger2013computational} has been
+Basic Local Alignment Search Tool (\emph{BLAST})~\cite{berger2013computational} has been
 the standard tool for performing homology (similarity) search on databases of nucleotide and
 protein sequences.
 BLAST takes a `seed-and-extend' approach; it looks for small, $k$-mer matches
 that might lead to longer matches, and greedily extends them, ultimately 
-producing a \emph{sequence alignment} between a query and each potential 
+producing a sequence alignment between a query and each potential 
 database hit.
 However, BLAST's running-time scales linearly with the size of the database being
 searched, which is problematic as sequence databases continue to grow at a
 faster rate than Moore's law.
 
-On a potentially even larger scale is the growth of metagenomic data.
+On a potentially even larger scale is the growth of \emph{metagenomic} data.
 Metagenomics is the study of the many genomes (bacterial, fungal, and even 
 viral) that make up a particular environment.
 Such an environment could be soil from a particular region (which can lead to 
@@ -384,7 +384,7 @@ challenges for certain bacterial, as well as viral, species and
 genera~\cite{janda200716s}. 
 
 The computational study of drugs and their targets based on chemical structure and function
-is known as chemogenomics~\cite{bredel2004chemogenomics}.
+is known as \emph{chemogenomics}~\cite{bredel2004chemogenomics}.
 In the fields of drug discovery and drug repurposing, the prediction 
 of biologically active compounds is an important task. 
 Computational high-throughput screening eliminates many compounds from 
@@ -434,12 +434,10 @@ Unlike some other approaches to compressing quality scores in the literature
 ~\cite{bonfield2013compression,ochoa2013qualcomp},
 Quartz~\cite{yu2015quality} takes advantage of the fact that mid-size $l$-mers can in many cases almost uniquely identify locations in the genome,
 bounding the likelihood that a quality score is informative and allowing for lossy compression of uninformative scores.
-approaches, but slightly improves the accuracy of downstream 
-variant-calling~\cite{yu2015quality}.
 Because Quartz's lossy compression injects information from the distribution of $l$-mers in the target genome, it demonstrates not only improved compression over competing approaches, but slightly improves the accuracy of downstream variant-calling \cite{yu2015quality}.
-Similarly, for the sequence string,
-taking advantage of sequence redundancy, Mince~\cite{patro2015data} groups 
-similar reads (those that share a common short---15bp---substring) together into `buckets', allowing that common substring to now be 
+Similarly, for the sequence component of the read,
+Mince~\cite{patro2015data} takes advantage of sequence redundancy by grouping
+similar reads (those that share a common short---15bp---substring) together into `buckets,' allowing that common substring to be 
 removed and treated as the bucket label, so that each read in the compressed 
 representation comprises only its unique differences from the bucket label.
 This approach allows a general-purpose compressor to achieve better compression.
